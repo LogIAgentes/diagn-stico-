@@ -105,7 +105,8 @@ function calculateResults() {
     const resultsText = document.getElementById('resultsText');
     if (resultsText) {
         resultsText.textContent = leadDescription;
-        resultsText.style.display = 'block'; // Forçar visibilidade
+        resultsText.style.display = 'block';
+        console.log('Mensagem de resultado definida:', leadDescription);
     } else {
         console.error('Elemento resultsText não encontrado');
     }
@@ -114,6 +115,7 @@ function calculateResults() {
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
         contactForm.style.display = (leadType === 'quente' || leadType === 'morno') ? 'block' : 'none';
+        console.log('Formulário de contato:', contactForm.style.display);
     } else {
         console.error('Elemento contactForm não encontrado');
     }
@@ -123,6 +125,7 @@ function calculateResults() {
     const resultsSection = document.getElementById('results');
     if (resultsSection) {
         resultsSection.classList.add('active');
+        console.log('Seção de resultados exibida');
     } else {
         console.error('Seção results não encontrada');
     }
@@ -131,6 +134,7 @@ function calculateResults() {
 }
 
 function downloadReward() {
+    console.log('Tentando baixar PDF');
     window.open('https://drive.google.com/uc?export=download&id=18UX4I0amlZkebsLvEya_j665Q42bhN6A', '_blank');
 }
 
@@ -138,20 +142,34 @@ function submitForm() {
     const leadType = document.getElementById('leadType').value;
     const userName = document.getElementById('userName').value;
     const userEmail = document.getElementById('userEmail').value;
+    const errorMessage = document.getElementById('errorMessage');
 
     // Validar nome e email para leads quentes e mornos
-    const errorMessage = document.getElementById('errorMessage');
     if ((leadType === 'quente' || leadType === 'morno') && (!userName || !userEmail)) {
         if (errorMessage) {
             document.getElementById('results').classList.remove('active');
             errorMessage.style.display = 'block';
             errorMessage.querySelector('#errorText').textContent = 'Por favor, preencha seu nome e email para continuar.';
-        } else {
-            console.error('Elemento errorMessage não encontrado');
+            console.log('Erro: Nome ou email não preenchidos');
         }
         return;
     }
 
+    // Mock de envio local (Netlify Forms só funciona após deploy)
+    const isLocal = window.location.protocol === 'file:';
+    if (isLocal) {
+        console.log('Ambiente local detectado. Simulando envio do formulário.');
+        document.getElementById('loadingOverlay').style.display = 'flex';
+        setTimeout(() => {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('successMessage').style.display = 'block';
+            console.log('Simulação de envio bem-sucedida');
+        }, 1000);
+        return;
+    }
+
+    // Envio real para Netlify
     document.getElementById('loadingOverlay').style.display = 'flex';
     const form = document.getElementById('leadForm');
     const formData = new FormData(form);
@@ -166,6 +184,7 @@ function submitForm() {
             document.getElementById('loadingOverlay').style.display = 'none';
             document.getElementById('results').classList.remove('active');
             document.getElementById('successMessage').style.display = 'block';
+            console.log('Formulário enviado com sucesso');
         } else {
             throw new Error('Erro ao enviar o formulário');
         }
@@ -176,8 +195,7 @@ function submitForm() {
         if (errorMessage) {
             errorMessage.style.display = 'block';
             errorMessage.querySelector('#errorText').textContent = 'Não foi possível enviar suas respostas. Tente novamente mais tarde.';
-        } else {
-            console.error('Elemento errorMessage não encontrado');
+            console.log('Erro no envio:', error);
         }
     });
 }
