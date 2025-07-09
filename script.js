@@ -3,18 +3,25 @@ const totalSections = 3;
 
 function updateProgress() {
     const progressPercentage = (currentSection / totalSections) * 100;
-    document.getElementById('progressFill').style.width = `${progressPercentage}%`;
-    document.getElementById('progressText').textContent = `Etapa ${currentSection} de ${totalSections}`;
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    if (progressFill && progressText) {
+        progressFill.style.width = `${progressPercentage}%`;
+        progressText.textContent = `Etapa ${currentSection} de ${totalSections}`;
+    }
 }
 
 function nextSection() {
     if (currentSection < totalSections + 1) {
-        document.getElementById(`section${currentSection}`).classList.remove('active');
+        const current = document.getElementById(`section${currentSection}`);
+        if (current) current.classList.remove('active');
         currentSection++;
         if (currentSection <= totalSections) {
-            document.getElementById(`section${currentSection}`).classList.add('active');
+            const next = document.getElementById(`section${currentSection}`);
+            if (next) next.classList.add('active');
         } else {
-            document.getElementById('results').classList.add('active');
+            const results = document.getElementById('results');
+            if (results) results.classList.add('active');
         }
         updateProgress();
     }
@@ -22,9 +29,11 @@ function nextSection() {
 
 function prevSection() {
     if (currentSection > 1) {
-        document.getElementById(`section${currentSection}`).classList.remove('active');
+        const current = document.getElementById(`section${currentSection}`);
+        if (current) current.classList.remove('active');
         currentSection--;
-        document.getElementById(`section${currentSection}`).classList.add('active');
+        const prev = document.getElementById(`section${currentSection}`);
+        if (prev) prev.classList.add('active');
         updateProgress();
     }
 }
@@ -34,39 +43,27 @@ function calculateResults() {
 
     // Pergunta 1
     const q1 = document.querySelector('input[name="q1"]:checked');
-    if (q1) {
-        score += parseInt(q1.getAttribute('data-score'));
-    }
+    if (q1) score += parseInt(q1.getAttribute('data-score'));
 
     // Pergunta 2
     const q2 = document.querySelector('input[name="q2"]:checked');
-    if (q2) {
-        score += parseInt(q2.getAttribute('data-score'));
-    }
+    if (q2) score += parseInt(q2.getAttribute('data-score'));
 
     // Pergunta 3
     const q3 = document.querySelector('input[name="q3"]:checked');
-    if (q3) {
-        score += parseInt(q3.getAttribute('data-score'));
-    }
+    if (q3) score += parseInt(q3.getAttribute('data-score'));
 
     // Pergunta 4
     const q4 = document.querySelector('input[name="q4"]:checked');
-    if (q4) {
-        score += parseInt(q4.getAttribute('data-score'));
-    }
+    if (q4) score += parseInt(q4.getAttribute('data-score'));
 
     // Pergunta 5
     const q5 = document.querySelector('input[name="q5"]:checked');
-    if (q5) {
-        score += parseInt(q5.getAttribute('data-score'));
-    }
+    if (q5) score += parseInt(q5.getAttribute('data-score'));
 
     // Pergunta 6
     const q6 = document.querySelector('input[name="q6"]:checked');
-    if (q6) {
-        score += parseInt(q6.getAttribute('data-score'));
-    }
+    if (q6) score += parseInt(q6.getAttribute('data-score'));
 
     // Pergunta 7 (checkboxes)
     const q7 = document.querySelectorAll('input[name="q7"]:checked');
@@ -76,9 +73,7 @@ function calculateResults() {
 
     // Pergunta 8
     const q8 = document.querySelector('input[name="q8"]:checked');
-    if (q8) {
-        score += parseInt(q8.getAttribute('data-score'));
-    }
+    if (q8) score += parseInt(q8.getAttribute('data-score'));
 
     // Determinar tipo de lead
     let leadType = 'frio';
@@ -97,6 +92,7 @@ function calculateResults() {
     if (leadTypeInput && leadScoreInput) {
         leadTypeInput.value = leadType;
         leadScoreInput.value = score.toFixed(1);
+        console.log('Campos ocultos preenchidos:', { leadType, leadScore: score.toFixed(1) });
     } else {
         console.error('Campos leadType ou leadScore não encontrados');
     }
@@ -106,7 +102,7 @@ function calculateResults() {
     if (resultsText) {
         resultsText.textContent = leadDescription;
         resultsText.style.display = 'block';
-        console.log('Mensagem de resultado definida:', leadDescription);
+        console.log('Mensagem de resultado:', leadDescription);
     } else {
         console.error('Elemento resultsText não encontrado');
     }
@@ -121,7 +117,8 @@ function calculateResults() {
     }
 
     // Mostrar seção de resultados
-    document.getElementById(`section${currentSection}`).classList.remove('active');
+    const current = document.getElementById(`section${currentSection}`);
+    if (current) current.classList.remove('active');
     const resultsSection = document.getElementById('results');
     if (resultsSection) {
         resultsSection.classList.add('active');
@@ -155,7 +152,7 @@ function submitForm() {
         return;
     }
 
-    // Mock de envio local (Netlify Forms só funciona após deploy)
+    // Mock de envio local
     const isLocal = window.location.protocol === 'file:';
     if (isLocal) {
         console.log('Ambiente local detectado. Simulando envio do formulário.');
@@ -209,6 +206,7 @@ function retrySubmit() {
     if (resultsSection) {
         resultsSection.classList.add('active');
     }
+    console.log('Tentando novamente');
 }
 
 // Inicializar progresso
