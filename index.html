@@ -314,7 +314,7 @@
                         <label class="question-label">
                             Você estaria disposto(a) a investir em soluções de IA personalizadas para sua empresa/carreira?
                         </label>
-                        <div class="radio-group">
+                        <div class=" rad io-group">
                             <label class="radio-option">
                                 <input type="radio" name="q8" value="sim_certeza" data-score="2">
                                 <span class="radio-custom"></span>
@@ -353,10 +353,7 @@
                 <section class="form-section" id="results">
                     <div class="results-content">
                         <div class="results-header">
-                            <h2 class="results-title" id="resultsTitle">Seu Perfil</h2>
-                            <div class="results-badge" id="resultsBadge">
-                                <span id="leadTypeText"></span>
-                            </div>
+                            <h2 class="results-title" id="resultsTitle">Obrigado!</h2>
                         </div>
                         <div class="results-description" id="resultsDescription">
                             <p id="resultsText"></p>
@@ -435,6 +432,22 @@
                 </div>
                 <h3>Obrigado pela participação!</h3>
                 <p>Suas respostas foram registradas com sucesso. Em breve você receberá conteúdos exclusivos sobre IA.</p>
+            </div>
+        </div>
+
+        <!-- Error message -->
+        <div class="error-message" id="errorMessage" style="display: none;">
+            <div class="error-content">
+                <div class="error-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                </div>
+                <h3>Ops, algo deu errado!</h3>
+                <p>Não foi possível enviar suas respostas. Tente novamente mais tarde.</p>
+                <button type="button" class="btn btn-primary" onclick="retrySubmit()">Tentar Novamente</button>
             </div>
         </div>
     </div>
