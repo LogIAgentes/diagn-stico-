@@ -218,7 +218,7 @@ function updateResultsContent() {
     // Configurar conteúdo baseado no tipo de lead
     switch (leadType) {
         case 'quente':
-            leadTypeText.textContent = 'Lead Quente 🔥';
+            leadTypeText.textContent = 'Pronto Para Usar Soluções Com IA 🔥';
             resultsDescription.innerHTML = `
                 <p><strong>Excelente!</strong> Suas respostas indicam um alto potencial de interesse e investimento em soluções de IA. Você está no caminho certo para transformar seu negócio com inteligência artificial.</p>
                 <p>Pontuação: ${leadScore} pontos</p>
@@ -227,7 +227,7 @@ function updateResultsContent() {
             break;
             
         case 'morno':
-            leadTypeText.textContent = 'Lead Morno 🌡️';
+            leadTypeText.textContent = 'Potencial Para Usar Soluções Com IA 🌡️';
             resultsDescription.innerHTML = `
                 <p><strong>Muito bom!</strong> Você demonstra interesse em IA e há oportunidades claras para implementação. Com o direcionamento certo, sua empresa pode se beneficiar significativamente da inteligência artificial.</p>
                 <p>Pontuação: ${leadScore} pontos</p>
