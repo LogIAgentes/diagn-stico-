@@ -314,7 +314,7 @@
                         <label class="question-label">
                             Você estaria disposto(a) a investir em soluções de IA personalizadas para sua empresa/carreira?
                         </label>
-                        <div class=" rad io-group">
+                        <div class="radio-group">
                             <label class="radio-option">
                                 <input type="radio" name="q8" value="sim_certeza" data-score="2">
                                 <span class="radio-custom"></span>
@@ -353,13 +353,13 @@
                 <section class="form-section" id="results">
                     <div class="results-content">
                         <div class="results-header">
-                            <h2 class="results-title" id="resultsTitle">Obrigado!</h2>
+                            <h2 class="results-title">Seu Perfil</h2>
                         </div>
                         <div class="results-description" id="resultsDescription">
                             <p id="resultsText"></p>
                         </div>
                         <!-- Formulário de contato (aparece apenas para leads quentes e mornos) -->
-                        <div class="contact-form" id="contactForm" style="display: none;">
+                        <div class="contact-form" id="contactForm">
                             <h3 class="contact-title">Receba soluções personalizadas de IA</h3>
                             <p class="contact-description">Deixe seus dados para receber conteúdos exclusivos e propostas de soluções de IA para seu negócio.</p>
                             <div class="input-group">
@@ -446,7 +446,7 @@
                     </svg>
                 </div>
                 <h3>Ops, algo deu errado!</h3>
-                <p>Não foi possível enviar suas respostas. Tente novamente mais tarde.</p>
+                <p id="errorText">Não foi possível enviar suas respostas. Tente novamente mais tarde.</p>
                 <button type="button" class="btn btn-primary" onclick="retrySubmit()">Tentar Novamente</button>
             </div>
         </div>
