@@ -355,30 +355,25 @@
                         <div class="results-header">
                             <h2 class="results-title" id="resultsTitle">Seu Perfil</h2>
                             <div class="results-badge" id="resultsBadge">
-                                <span id="leadTypeText">Pronto Para Usar Soluções Com IA</span>
+                                <span id="leadTypeText"></span>
                             </div>
                         </div>
-                        
                         <div class="results-description" id="resultsDescription">
-                            <p>Com base nas suas respostas, identificamos um alto potencial de interesse em soluções de IA.</p>
+                            <p id="resultsText"></p>
                         </div>
-
                         <!-- Formulário de contato (aparece apenas para leads quentes e mornos) -->
                         <div class="contact-form" id="contactForm" style="display: none;">
                             <h3 class="contact-title">Receba soluções personalizadas de IA</h3>
                             <p class="contact-description">Deixe seus dados para receber conteúdos exclusivos e propostas de soluções de IA para seu negócio.</p>
-                            
                             <div class="input-group">
                                 <label for="userName" class="input-label">Nome completo</label>
                                 <input type="text" id="userName" name="userName" class="form-input" placeholder="Digite seu nome completo">
                             </div>
-                            
                             <div class="input-group">
                                 <label for="userEmail" class="input-label">E-mail</label>
                                 <input type="email" id="userEmail" name="userEmail" class="form-input" placeholder="Digite seu melhor e-mail">
                             </div>
                         </div>
-
                         <!-- Recompensa -->
                         <div class="reward-section">
                             <div class="reward-card">
@@ -403,7 +398,6 @@
                                 </button>
                             </div>
                         </div>
-
                         <div class="final-actions">
                             <button type="button" class="btn btn-primary btn-large" onclick="submitForm()">
                                 Quero receber soluções com IA
@@ -414,6 +408,9 @@
                             </button>
                             <p class="privacy-note">Seus dados estão seguros e não serão compartilhados com terceiros.</p>
                         </div>
+                        <!-- Campos ocultos -->
+                        <input type="hidden" name="leadType" id="leadType">
+                        <input type="hidden" name="leadScore" id="leadScore">
                     </div>
                 </section>
             </form>
@@ -445,4 +442,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
