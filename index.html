@@ -1,457 +1,215 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagnóstico de IA</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="container">
-        <header class="header">
-            <div class="header-content">
-                <h1 class="main-title">Diagnóstico de Inteligência Artificial</h1>
-                <p class="subtitle">Descubra como sua empresa pode aproveitar melhor a IA</p>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <span class="progress-text" id="progressText">Etapa 1 de 3</span>
-            </div>
-        </header>
+let currentSection = 1;
+const totalSections = 3;
 
-        <main class="main-content">
-            <form id="leadForm" class="form" data-netlify="true" name="lead-form">
-                <!-- Bloco 1: Diagnóstico -->
-                <section class="form-section active" id="section1">
-                    <div class="section-header">
-                        <h2 class="section-title">Diagnóstico Atual</h2>
-                        <p class="section-description">Vamos entender o cenário atual da sua empresa com IA</p>
-                    </div>
+function updateProgress() {
+    const progressPercentage = (currentSection / totalSections) * 100;
+    document.getElementById('progressFill').style.width = `${progressPercentage}%`;
+    document.getElementById('progressText').textContent = `Etapa ${currentSection} de ${totalSections}`;
+}
 
-                    <div class="question-group">
-                        <label class="question-label">
-                            Sua empresa já investiu em treinamentos ou cursos de IA nos últimos 24 meses?
-                        </label>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input type="radio" name="q1" value="sim_mais_uma_vez" data-score="1">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Sim, mais de uma vez</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q1" value="sim_uma_vez" data-score="1">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Sim, uma vez</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q1" value="nao_planejando" data-score="2">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Não, mas estamos planejando</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q1" value="nao_sem_planos" data-score="0">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Não, e não temos planos</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q1" value="nao_sei" data-score="1">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Não sei</span>
-                            </label>
-                        </div>
-                    </div>
+function nextSection() {
+    if (currentSection < totalSections + 1) {
+        document.getElementById(`section${currentSection}`).classList.remove('active');
+        currentSection++;
+        if (currentSection <= totalSections) {
+            document.getElementById(`section${currentSection}`).classList.add('active');
+        } else {
+            document.getElementById('results').classList.add('active');
+        }
+        updateProgress();
+    }
+}
 
-                    <div class="question-group">
-                        <label class="question-label">
-                            Nos últimos 12 meses, sua empresa tentou implementar soluções de Inteligência Artificial?
-                        </label>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input type="radio" name="q2" value="sim_sucesso" data-score="2">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Sim, implementamos com sucesso</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q2" value="sim_dificuldades" data-score="1">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Sim, mas tivemos dificuldades</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q2" value="nao_interesse" data-score="2">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Não, mas temos interesse</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q2" value="nao_sem_interesse" data-score="0">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Não, e não temos interesse</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q2" value="nao_sei_informar" data-score="1">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Não sei informar</span>
-                            </label>
-                        </div>
-                    </div>
+function prevSection() {
+    if (currentSection > 1) {
+        document.getElementById(`section${currentSection}`).classList.remove('active');
+        currentSection--;
+        document.getElementById(`section${currentSection}`).classList.add('active');
+        updateProgress();
+    }
+}
 
-                    <div class="question-group">
-                        <label class="question-label">
-                            Com que frequência sua empresa realiza treinamentos ou capacitações em IA?
-                        </label>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input type="radio" name="q3" value="sempre" data-score="2">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Sempre</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q3" value="frequentemente" data-score="1">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Frequentemente</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q3" value="as_vezes" data-score="1">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Às vezes</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q3" value="raramente" data-score="0">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Raramente</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q3" value="nunca" data-score="0">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Nunca</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q3" value="nao_realizamos" data-score="0">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Não realizamos treinamentos em IA</span>
-                            </label>
-                        </div>
-                    </div>
+function calculateResults() {
+    let score = 0;
 
-                    <div class="question-group">
-                        <label class="question-label">
-                            Os treinamentos realizados resultaram em projetos reais aplicados?
-                        </label>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input type="radio" name="q4" value="sim_diretamente" data-score="2">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Sim, diretamente aplicados</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q4" value="parcialmente" data-score="1">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Parcialmente aplicados</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q4" value="nao_teoria" data-score="0">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Não, ficaram só na teoria</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q4" value="nao_realizamos_treino" data-score="0">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Não realizamos treinamentos</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q4" value="nao_sei_informar_q4" data-score="1">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Não sei informar</span>
-                            </label>
-                        </div>
-                    </div>
+    // Pergunta 1
+    const q1 = document.querySelector('input[name="q1"]:checked');
+    if (q1) {
+        score += parseInt(q1.getAttribute('data-score'));
+    }
 
-                    <div class="navigation-buttons">
-                        <button type="button" class="btn btn-primary" onclick="nextSection()">
-                            Próxima Etapa
-                            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
-                            </svg>
-                        </button>
-                    </div>
-                </section>
+    // Pergunta 2
+    const q2 = document.querySelector('input[name="q2"]:checked');
+    if (q2) {
+        score += parseInt(q2.getAttribute('data-score'));
+    }
 
-                <!-- Bloco 2: Dificuldades -->
-                <section class="form-section" id="section2">
-                    <div class="section-header">
-                        <h2 class="section-title">Principais Dificuldades</h2>
-                        <p class="section-description">Identifique os maiores desafios na implementação de IA</p>
-                    </div>
+    // Pergunta 3
+    const q3 = document.querySelector('input[name="q3"]:checked');
+    if (q3) {
+        score += parseInt(q3.getAttribute('data-score'));
+    }
 
-                    <div class="question-group">
-                        <label class="question-label">
-                            Qual é o principal desafio ao tentar implementar ou utilizar inteligência artificial (IA) em sua empresa/carreira hoje?
-                        </label>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input type="radio" name="q5" value="falta_conhecimento" data-score="1">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Falta de conhecimento técnico aprofundado na equipe</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q5" value="dificuldade_profissionais" data-score="1">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Dificuldade em encontrar profissionais preparados para aplicar IA de forma prática no seu negócio</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q5" value="alto_custo" data-score="0">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Alto custo de consultorias ou soluções prontas de IA</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q5" value="dificuldade_roi" data-score="0">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Dificuldade em medir o retorno sobre o investimento (ROI) de projetos de IA</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q5" value="falta_estrategia" data-score="1">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Falta de uma estratégia clara de IA ou priorização de projetos</span>
-                            </label>
-                        </div>
-                    </div>
+    // Pergunta 4
+    const q4 = document.querySelector('input[name="q4"]:checked');
+    if (q4) {
+        score += parseInt(q4.getAttribute('data-score'));
+    }
 
-                    <div class="question-group">
-                        <label class="question-label">
-                            Quão difícil é encontrar profissionais preparados para aplicar IA de forma prática no seu negócio?
-                        </label>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input type="radio" name="q6" value="muito_facil" data-score="0">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">1 - Muito fácil</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q6" value="facil" data-score="0">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">2 - Fácil</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q6" value="razoavel" data-score="1">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">3 - Razoável</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q6" value="dificil" data-score="1">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">4 - Difícil</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q6" value="muito_dificil" data-score="2">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">5 - Muito difícil</span>
-                            </label>
-                        </div>
-                    </div>
+    // Pergunta 5
+    const q5 = document.querySelector('input[name="q5"]:checked');
+    if (q5) {
+        score += parseInt(q5.getAttribute('data-score'));
+    }
 
-                    <div class="navigation-buttons">
-                        <button type="button" class="btn btn-secondary" onclick="prevSection()">
-                            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M19 12H5M12 19l-7-7 7-7"/>
-                            </svg>
-                            Voltar
-                        </button>
-                        <button type="button" class="btn btn-primary" onclick="nextSection()">
-                            Próxima Etapa
-                            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
-                            </svg>
-                        </button>
-                    </div>
-                </section>
+    // Pergunta 6
+    const q6 = document.querySelector('input[name="q6"]:checked');
+    if (q6) {
+        score += parseInt(q6.getAttribute('data-score'));
+    }
 
-                <!-- Bloco 3: Expectativas -->
-                <section class="form-section" id="section3">
-                    <div class="section-header">
-                        <h2 class="section-title">Expectativas e Investimento</h2>
-                        <p class="section-description">Entenda suas perspectivas futuras com IA</p>
-                    </div>
+    // Pergunta 7 (checkboxes)
+    const q7 = document.querySelectorAll('input[name="q7"]:checked');
+    q7.forEach(checkbox => {
+        score += parseInt(checkbox.getAttribute('data-score'));
+    });
 
-                    <div class="question-group">
-                        <label class="question-label">
-                            Quais são as suas expectativas em relação ao uso da IA em sua empresa/carreira nos próximos 12 meses? (Selecione todas que se aplicam)
-                        </label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-option">
-                                <input type="checkbox" name="q7" value="eficiencia_operacional" data-score="2">
-                                <span class="checkbox-custom"></span>
-                                <span class="checkbox-text">Aumentar a eficiência operacional</span>
-                            </label>
-                            <label class="checkbox-option">
-                                <input type="checkbox" name="q7" value="novos_produtos" data-score="2">
-                                <span class="checkbox-custom"></span>
-                                <span class="checkbox-text">Desenvolver novos produtos ou serviços</span>
-                            </label>
-                            <label class="checkbox-option">
-                                <input type="checkbox" name="q7" value="tomada_decisoes" data-score="1">
-                                <span class="checkbox-custom"></span>
-                                <span class="checkbox-text">Melhorar a tomada de decisões</span>
-                            </label>
-                            <label class="checkbox-option">
-                                <input type="checkbox" name="q7" value="reduzir_custos" data-score="1">
-                                <span class="checkbox-custom"></span>
-                                <span class="checkbox-text">Reduzir custos</span>
-                            </label>
-                            <label class="checkbox-option">
-                                <input type="checkbox" name="q7" value="vantagem_competitiva" data-score="2">
-                                <span class="checkbox-custom"></span>
-                                <span class="checkbox-text">Ganhar vantagem competitiva</span>
-                            </label>
-                            <label class="checkbox-option">
-                                <input type="checkbox" name="q7" value="sem_expectativas" data-score="0">
-                                <span class="checkbox-custom"></span>
-                                <span class="checkbox-text">Não tenho expectativas claras</span>
-                            </label>
-                        </div>
-                    </div>
+    // Pergunta 8
+    const q8 = document.querySelector('input[name="q8"]:checked');
+    if (q8) {
+        score += parseInt(q8.getAttribute('data-score'));
+    }
 
-                    <div class="question-group">
-                        <label class="question-label">
-                            Você estaria disposto(a) a investir em soluções de IA personalizadas para sua empresa/carreira?
-                        </label>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input type="radio" name="q8" value="sim_certeza" data-score="2">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Sim, com certeza</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q8" value="talvez_custo_beneficio" data-score="1">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Talvez, dependendo do custo-benefício</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="q8" value="nao_momento" data-score="0">
-                                <span class="radio-custom"></span>
-                                <span class="radio-text">Não, no momento não</span>
-                            </label>
-                        </div>
-                    </div>
+    // Determinar tipo de lead
+    let leadType = 'frio';
+    let leadDescription = 'Suas respostas indicam um perfil com baixo engajamento, pouca disposição para investir ou implementar mudanças, e/ou sem expectativas claras para o futuro. Continue explorando para descobrir como a IA pode ajudar seu negócio!';
+    if (score >= 13.3) {
+        leadType = 'quente';
+        leadDescription = 'Parabéns! Suas respostas mostram um perfil altamente engajado, com histórico de investimento, interesse em inovação, expectativas claras e disposição para investir. Sua empresa está pronta para transformar seu negócio com IA!';
+    } else if (score >= 7.7) {
+        leadType = 'morno';
+        leadDescription = 'Suas respostas indicam um perfil com algum interesse e abertura a mudanças, mas ainda com limitações ou incertezas em relação ao investimento e à implementação. Com as soluções certas, sua empresa pode aproveitar melhor a IA!';
+    }
 
-                    <div class="navigation-buttons">
-                        <button type="button" class="btn btn-secondary" onclick="prevSection()">
-                            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M19 12H5M12 19l-7-7 7-7"/>
-                            </svg>
-                            Voltar
-                        </button>
-                        <button type="button" class="btn btn-primary" onclick="calculateResults()">
-                            Ver Resultados
-                            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 12l2 2 4-4"/>
-                            </svg>
-                        </button>
-                    </div>
-                </section>
+    // Preencher campos ocultos
+    const leadTypeInput = document.getElementById('leadType');
+    const leadScoreInput = document.getElementById('leadScore');
+    if (leadTypeInput && leadScoreInput) {
+        leadTypeInput.value = leadType;
+        leadScoreInput.value = score.toFixed(1);
+    } else {
+        console.error('Campos leadType ou leadScore não encontrados');
+    }
 
-                <!-- Seção de Resultados -->
-                <section class="form-section" id="results">
-                    <div class="results-content">
-                        <div class="results-header">
-                            <h2 class="results-title">Seu Perfil</h2>
-                        </div>
-                        <div class="results-description" id="resultsDescription">
-                            <p id="resultsText"></p>
-                        </div>
-                        <!-- Formulário de contato (aparece apenas para leads quentes e mornos) -->
-                        <div class="contact-form" id="contactForm">
-                            <h3 class="contact-title">Receba soluções personalizadas de IA</h3>
-                            <p class="contact-description">Deixe seus dados para receber conteúdos exclusivos e propostas de soluções de IA para seu negócio.</p>
-                            <div class="input-group">
-                                <label for="userName" class="input-label">Nome completo</label>
-                                <input type="text" id="userName" name="userName" class="form-input" placeholder="Digite seu nome completo">
-                            </div>
-                            <div class="input-group">
-                                <label for="userEmail" class="input-label">E-mail</label>
-                                <input type="email" id="userEmail" name="userEmail" class="form-input" placeholder="Digite seu melhor e-mail">
-                            </div>
-                        </div>
-                        <!-- Recompensa -->
-                        <div class="reward-section">
-                            <div class="reward-card">
-                                <div class="reward-icon">
-                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                        <polyline points="14,2 14,8 20,8"/>
-                                        <line x1="16" y1="13" x2="8" y2="13"/>
-                                        <line x1="16" y1="17" x2="8" y2="17"/>
-                                        <polyline points="10,9 9,9 8,9"/>
-                                    </svg>
-                                </div>
-                                <h3 class="reward-title">Biblioteca de Prompts de IA para Negócios</h3>
-                                <p class="reward-description">Receba gratuitamente nossa biblioteca exclusiva com prompts práticos para aplicar IA no seu negócio.</p>
-                                <button type="button" class="btn btn-reward" onclick="downloadReward()">
-                                    <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                        <polyline points="7,10 12,15 17,10"/>
-                                        <line x1="12" y1="15" x2="12" y2="3"/>
-                                    </svg>
-                                    Baixar Biblioteca Gratuita
-                                </button>
-                            </div>
-                        </div>
-                        <div class="final-actions">
-                            <button type="button" class="btn btn-primary btn-large" onclick="submitForm()">
-                                Quero receber soluções com IA
-                                <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 2L11 13"/>
-                                    <path d="M22 2l-7 20-4-9-9-4z"/>
-                                </svg>
-                            </button>
-                            <p class="privacy-note">Seus dados estão seguros e não serão compartilhados com terceiros.</p>
-                        </div>
-                        <!-- Campos ocultos -->
-                        <input type="hidden" name="leadType" id="leadType">
-                        <input type="hidden" name="leadScore" id="leadScore">
-                    </div>
-                </section>
-            </form>
-        </main>
+    // Atualizar seção de resultados
+    const resultsText = document.getElementById('resultsText');
+    if (resultsText) {
+        resultsText.textContent = leadDescription;
+        resultsText.style.display = 'block';
+        console.log('Mensagem de resultado definida:', leadDescription);
+    } else {
+        console.error('Elemento resultsText não encontrado');
+    }
 
-        <!-- Loading overlay -->
-        <div class="loading-overlay" id="loadingOverlay" style="display: none;">
-            <div class="loading-spinner">
-                <div class="spinner"></div>
-                <p>Processando suas respostas...</p>
-            </div>
-        </div>
+    // Mostrar formulário de contato apenas para leads quentes e mornos
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.style.display = (leadType === 'quente' || leadType === 'morno') ? 'block' : 'none';
+        console.log('Formulário de contato:', contactForm.style.display);
+    } else {
+        console.error('Elemento contactForm não encontrado');
+    }
 
-        <!-- Success message -->
-        <div class="success-message" id="successMessage" style="display: none;">
-            <div class="success-content">
-                <div class="success-icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                        <polyline points="22,4 12,14.01 9,11.01"/>
-                    </svg>
-                </div>
-                <h3>Obrigado pela participação!</h3>
-                <p>Suas respostas foram registradas com sucesso. Em breve você receberá conteúdos exclusivos sobre IA.</p>
-            </div>
-        </div>
+    // Mostrar seção de resultados
+    document.getElementById(`section${currentSection}`).classList.remove('active');
+    const resultsSection = document.getElementById('results');
+    if (resultsSection) {
+        resultsSection.classList.add('active');
+        console.log('Seção de resultados exibida');
+    } else {
+        console.error('Seção results não encontrada');
+    }
+    currentSection = totalSections + 1;
+    updateProgress();
+}
 
-        <!-- Error message -->
-        <div class="error-message" id="errorMessage" style="display: none;">
-            <div class="error-content">
-                <div class="error-icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <line x1="12" y1="8" x2="12" y2="12"/>
-                        <line x1="12" y1="16" x2="12.01" y2="16"/>
-                    </svg>
-                </div>
-                <h3>Ops, algo deu errado!</h3>
-                <p id="errorText">Não foi possível enviar suas respostas. Tente novamente mais tarde.</p>
-                <button type="button" class="btn btn-primary" onclick="retrySubmit()">Tentar Novamente</button>
-            </div>
-        </div>
-    </div>
+function downloadReward() {
+    console.log('Tentando baixar PDF');
+    window.open('https://drive.google.com/uc?export=download&id=18UX4I0amlZkebsLvEya_j665Q42bhN6A', '_blank');
+}
 
-    <script src="script.js"></script>
-</body>
-</html>
+function submitForm() {
+    const leadType = document.getElementById('leadType').value;
+    const userName = document.getElementById('userName').value;
+    const userEmail = document.getElementById('userEmail').value;
+    const errorMessage = document.getElementById('errorMessage');
+
+    // Validar nome e email para leads quentes e mornos
+    if ((leadType === 'quente' || leadType === 'morno') && (!userName || !userEmail)) {
+        if (errorMessage) {
+            document.getElementById('results').classList.remove('active');
+            errorMessage.style.display = 'block';
+            errorMessage.querySelector('#errorText').textContent = 'Por favor, preencha seu nome e email para continuar.';
+            console.log('Erro: Nome ou email não preenchidos');
+        }
+        return;
+    }
+
+    // Mock de envio local (Netlify Forms só funciona após deploy)
+    const isLocal = window.location.protocol === 'file:';
+    if (isLocal) {
+        console.log('Ambiente local detectado. Simulando envio do formulário.');
+        document.getElementById('loadingOverlay').style.display = 'flex';
+        setTimeout(() => {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('successMessage').style.display = 'block';
+            console.log('Simulação de envio bem-sucedida');
+        }, 1000);
+        return;
+    }
+
+    // Envio real para Netlify
+    document.getElementById('loadingOverlay').style.display = 'flex';
+    const form = document.getElementById('leadForm');
+    const formData = new FormData(form);
+
+    fetch('/', {
+        method: 'POST',
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData).toString()
+    })
+    .then(response => {
+        if (response.ok) {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('successMessage').style.display = 'block';
+            console.log('Formulário enviado com sucesso');
+        } else {
+            throw new Error('Erro ao enviar o formulário');
+        }
+    })
+    .catch(error => {
+        document.getElementById('loadingOverlay').style.display = 'none';
+        document.getElementById('results').classList.remove('active');
+        if (errorMessage) {
+            errorMessage.style.display = 'block';
+            errorMessage.querySelector('#errorText').textContent = 'Não foi possível enviar suas respostas. Tente novamente mais tarde.';
+            console.log('Erro no envio:', error);
+        }
+    });
+}
+
+function retrySubmit() {
+    const errorMessage = document.getElementById('errorMessage');
+    if (errorMessage) {
+        errorMessage.style.display = 'none';
+    }
+    const resultsSection = document.getElementById('results');
+    if (resultsSection) {
+        resultsSection.classList.add('active');
+    }
+}
+
+// Inicializar progresso
+updateProgress();
