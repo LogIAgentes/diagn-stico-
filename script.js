@@ -92,18 +92,40 @@ function calculateResults() {
     }
 
     // Preencher campos ocultos
-    document.getElementById('leadType').value = leadType;
-    document.getElementById('leadScore').value = score.toFixed(1);
+    const leadTypeInput = document.getElementById('leadType');
+    const leadScoreInput = document.getElementById('leadScore');
+    if (leadTypeInput && leadScoreInput) {
+        leadTypeInput.value = leadType;
+        leadScoreInput.value = score.toFixed(1);
+    } else {
+        console.error('Campos leadType ou leadScore não encontrados');
+    }
 
     // Atualizar seção de resultados
-    document.getElementById('resultsText').textContent = leadDescription;
+    const resultsText = document.getElementById('resultsText');
+    if (resultsText) {
+        resultsText.textContent = leadDescription;
+        resultsText.style.display = 'block'; // Forçar visibilidade
+    } else {
+        console.error('Elemento resultsText não encontrado');
+    }
 
     // Mostrar formulário de contato apenas para leads quentes e mornos
-    document.getElementById('contactForm').style.display = (leadType === 'quente' || leadType === 'morno') ? 'block' : 'none';
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.style.display = (leadType === 'quente' || leadType === 'morno') ? 'block' : 'none';
+    } else {
+        console.error('Elemento contactForm não encontrado');
+    }
 
     // Mostrar seção de resultados
     document.getElementById(`section${currentSection}`).classList.remove('active');
-    document.getElementById('results').classList.add('active');
+    const resultsSection = document.getElementById('results');
+    if (resultsSection) {
+        resultsSection.classList.add('active');
+    } else {
+        console.error('Seção results não encontrada');
+    }
     currentSection = totalSections + 1;
     updateProgress();
 }
@@ -118,10 +140,15 @@ function submitForm() {
     const userEmail = document.getElementById('userEmail').value;
 
     // Validar nome e email para leads quentes e mornos
+    const errorMessage = document.getElementById('errorMessage');
     if ((leadType === 'quente' || leadType === 'morno') && (!userName || !userEmail)) {
-        document.getElementById('results').classList.remove('active');
-        document.getElementById('errorMessage').style.display = 'block';
-        document.getElementById('errorMessage').querySelector('p').textContent = 'Por favor, preencha seu nome e email para continuar.';
+        if (errorMessage) {
+            document.getElementById('results').classList.remove('active');
+            errorMessage.style.display = 'block';
+            errorMessage.querySelector('#errorText').textContent = 'Por favor, preencha seu nome e email para continuar.';
+        } else {
+            console.error('Elemento errorMessage não encontrado');
+        }
         return;
     }
 
@@ -146,14 +173,24 @@ function submitForm() {
     .catch(error => {
         document.getElementById('loadingOverlay').style.display = 'none';
         document.getElementById('results').classList.remove('active');
-        document.getElementById('errorMessage').style.display = 'block';
-        document.getElementById('errorMessage').querySelector('p').textContent = 'Não foi possível enviar suas respostas. Tente novamente mais tarde.';
+        if (errorMessage) {
+            errorMessage.style.display = 'block';
+            errorMessage.querySelector('#errorText').textContent = 'Não foi possível enviar suas respostas. Tente novamente mais tarde.';
+        } else {
+            console.error('Elemento errorMessage não encontrado');
+        }
     });
 }
 
 function retrySubmit() {
-    document.getElementById('errorMessage').style.display = 'none';
-    document.getElementById('results').classList.add('active');
+    const errorMessage = document.getElementById('errorMessage');
+    if (errorMessage) {
+        errorMessage.style.display = 'none';
+    }
+    const resultsSection = document.getElementById('results');
+    if (resultsSection) {
+        resultsSection.classList.add('active');
+    }
 }
 
 // Inicializar progresso
