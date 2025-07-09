@@ -142,73 +142,95 @@ function submitForm() {
     const userEmail = document.getElementById('userEmail').value;
     const errorMessage = document.getElementById('errorMessage');
 
-    // Validar nome e email para leads quentes e mornos
+    // Validar nome e email apenas para leads quentes e mornos
     if ((leadType === 'quente' || leadType === 'morno') && (!userName || !userEmail)) {
         if (errorMessage) {
-            document.getElementById('results').classList.remove('active');
-            errorMessage.style.display = 'block';
-            errorMessage.querySelector('#errorText').textContent = 'Por favor, preencha seu nome e email para continuar.';
-            console.log('Erro: Nome ou email não preenchidos');
+            document.getElementById('results').classList.remove('active'); // Garante que a seção de resultados não está ativa
+            document.getElementById('successMessage').style.display = 'none'; // Esconde a mensagem de sucesso
+            errorMessage.style.display = 'block'; // Mostra a mensagem de erro
+            errorMessage.querySelector('#errorText').textContent = 'Por favor, preencha seu nome e e-mail para continuar.';
+            console.log('Erro: Nome ou e-mail não preenchidos');
         }
         return;
     }
 
-    // Mock de envio local
-    const isLocal = window.location.protocol === 'file:';
-    if (isLocal) {
-        console.log('Ambiente local detectado. Simulando envio do formulário.');
-        document.getElementById('loadingOverlay').style.display = 'flex';
-        setTimeout(() => {
-            document.getElementById('loadingOverlay').style.display = 'none';
-            document.getElementById('results').classList.remove('active');
-            document.getElementById('successMessage').style.display = 'block';
-            console.log('Simulação de envio bem-sucedida');
-        }, 1000);
-        return;
-    }
+    document.getElementById('loadingOverlay').style.display = 'flex'; // Mostra o spinner de carregamento
 
-    // Envio real para Netlify
-    document.getElementById('loadingOverlay').style.display = 'flex';
-    const form = document.getElementById('leadForm');
-    const formData = new FormData(form);
+    // Coletar todos os dados do formulário
+    const formData = new FormData();
+    formData.append('entry.SEU_ID_CAMPO_LEAD_TYPE', leadType); // Substitua com o ID real do seu campo leadType
+    formData.append('entry.SEU_ID_CAMPO_LEAD_SCORE', document.getElementById('leadScore').value); // Substitua com o ID real do seu campo leadScore
+    formData.append('entry.SEU_ID_CAMPO_USER_NAME', userName); // Substitua com o ID real do seu campo userName
+    formData.append('entry.SEU_ID_CAMPO_USER_EMAIL', userEmail); // Substitua com o ID real do seu campo userEmail
 
-    fetch('/', {
+    // Adicionar as respostas das perguntas (q1 a q8)
+    // VOCÊ PRECISARÁ ENCONTRAR OS IDS PARA CADA PERGUNTA (entry.SEU_ID_CAMPO_Qx)
+    // Exemplo:
+    // const q1 = document.querySelector('input[name="q1"]:checked');
+    // if (q1) formData.append('entry.SEU_ID_CAMPO_Q1', q1.value);
+
+    // *** IMPORTANTE: Você precisa encontrar os IDs dos campos do Google Forms ***
+    // O Google Forms usa IDs como "entry.123456789" para cada campo.
+    // Para encontrar esses IDs:
+    // 1. Abra seu Google Form (em modo de preenchimento, como se fosse um usuário).
+    // 2. Clique com o botão direito no campo que deseja (ex: nome, email, pergunta 1) e selecione "Inspecionar" (ou "Inspecionar Elemento").
+    // 3. Procure por um atributo `name` no input que se parece com `name="entry.123456789"`.
+    //    O número (ex: 123456789) é o ID que você precisa.
+    // Você fará isso para leadType, leadScore, userName, userEmail e todas as suas 8 perguntas (q1 a q8).
+
+    // Exemplo de como ficaria com IDs hipotéticos (SUBSTITUA PELOS SEUS REAIS):
+    // formData.append('entry.123456789', leadType); // leadType
+    // formData.append('entry.987654321', document.getElementById('leadScore').value); // leadScore
+    // formData.append('entry.111222333', userName); // userName
+    // formData.append('entry.444555666', userEmail); // userEmail
+
+    // const q1 = document.querySelector('input[name="q1"]:checked');
+    // if (q1) formData.append('entry.ID_DO_CAMPO_Q1', q1.value); // Use q1.value para pegar o valor do radio
+    // ... repita para q2, q3, etc.
+    // Para checkboxes (como q7), você precisará fazer um loop:
+    // const q7 = document.querySelectorAll('input[name="q7"]:checked');
+    // q7.forEach(checkbox => {
+    //     formData.append('entry.ID_DO_CAMPO_Q7', checkbox.value); // O Google Forms pode aceitar múltiplos valores para o mesmo ID para checkboxes
+    // });
+
+
+    fetch('https://docs.google.com/forms/d/e/1FAIpQLSeyIolUOSjvEo_GfgPqbS-X_9J_pwjLrQykVfUZtS-Nc6T7Zg/formResponse', {
         method: 'POST',
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData).toString()
+        body: formData,
+        mode: 'no-cors' // Modo no-cors é necessário para enviar para o Google Forms de forma simples
     })
-    .then(response => {
-        if (response.ok) {
-            document.getElementById('loadingOverlay').style.display = 'none';
-            document.getElementById('results').classList.remove('active');
-            document.getElementById('successMessage').style.display = 'block';
-            console.log('Formulário enviado com sucesso');
-        } else {
-            throw new Error('Erro ao enviar o formulário');
-        }
+    .then(() => {
+        // O Google Forms sempre retorna um sucesso (status 200) mesmo com no-cors,
+        // então não podemos verificar response.ok diretamente.
+        // Assumimos sucesso se não houver erro de rede.
+        document.getElementById('loadingOverlay').style.display = 'none';
+        document.getElementById('results').classList.remove('active'); // Oculta a seção de resultados se ela estiver ativa
+        document.getElementById('successMessage').style.display = 'block'; // Mostra a mensagem de sucesso
+        console.log('Formulário enviado com sucesso para o Google Forms!');
     })
     .catch(error => {
         document.getElementById('loadingOverlay').style.display = 'none';
-        document.getElementById('results').classList.remove('active');
+        document.getElementById('results').classList.remove('active'); // Oculta a seção de resultados
         if (errorMessage) {
             errorMessage.style.display = 'block';
             errorMessage.querySelector('#errorText').textContent = 'Não foi possível enviar suas respostas. Tente novamente mais tarde.';
-            console.log('Erro no envio:', error);
+            console.error('Erro ao enviar para o Google Forms:', error);
         }
     });
 }
 
-function retrySubmit() {
-    const errorMessage = document.getElementById('errorMessage');
-    if (errorMessage) {
-        errorMessage.style.display = 'none';
-    }
-    const resultsSection = document.getElementById('results');
-    if (resultsSection) {
-        resultsSection.classList.add('active');
-    }
-    console.log('Tentando novamente');
-}
+// A função retrySubmit() pode ser mantida como está, mas pode não ser necessária se o envio for bem-sucedido.
+// function retrySubmit() {
+//     const errorMessage = document.getElementById('errorMessage');
+//     if (errorMessage) {
+//         errorMessage.style.display = 'none';
+//     }
+//     const resultsSection = document.getElementById('results');
+//     if (resultsSection) {
+//         resultsSection.classList.add('active');
+//     }
+//     console.log('Tentando novamente');
+// }
 
 // Inicializar progresso
 updateProgress();
