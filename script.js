@@ -132,6 +132,7 @@ function calculateResults() {
 
 function downloadReward() {
     console.log('Tentando baixar PDF');
+    // Mude esta linha:
     window.open('https://drive.google.com/uc?export=download&id=18UX4I0amlZkebsLvEya_j665Q42bhN6A', '_blank');
 }
 
