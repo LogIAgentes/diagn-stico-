@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico de IA</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="main-title">Diagnóstico de Inteligência Artificial</h1>
+                <p class="subtitle">Questionário</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-text" id="progressText">Etapa 1 de 3</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <form id="leadForm" class="form">
+                <!-- Bloco 1: Diagnóstico -->
+                <section class="form-section active" id="section1">
+                    <div class="section-header">
+                        <h2 class="section-title">Diagnóstico Atual</h2>
+                        <p class="section-description">Vamos entender o cenário atual da sua empresa com IA</p>
+                    </div>
+
+                    <div class="question-group">
+                        <label class="question-label">
+                            Sua empresa já investiu em treinamentos ou cursos de IA nos últimos 24 meses?
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q1" value="sim_mais_uma_vez" data-score="1">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Sim, mais de uma vez</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q1" value="sim_uma_vez" data-score="1">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Sim, uma vez</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q1" value="nao_planejando" data-score="2">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Não, mas estamos planejando</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q1" value="nao_sem_planos" data-score="0">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Não, e não temos planos</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q1" value="nao_sei" data-score="1">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Não sei</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label class="question-label">
+                            Nos últimos 12 meses, sua empresa tentou implementar soluções de Inteligência Artificial?
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q2" value="sim_sucesso" data-score="2">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Sim, implementamos com sucesso</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q2" value="sim_dificuldades" data-score="1">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Sim, mas tivemos dificuldades</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q2" value="nao_interesse" data-score="2">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Não, mas temos interesse</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q2" value="nao_sem_interesse" data-score="0">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Não, e não temos interesse</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q2" value="nao_sei_informar" data-score="1">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Não sei informar</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label class="question-label">
+                            Com que frequência sua empresa realiza treinamentos ou capacitações em IA?
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q3" value="sempre" data-score="2">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Sempre</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q3" value="frequentemente" data-score="1">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Frequentemente</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q3" value="as_vezes" data-score="1">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Às vezes</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q3" value="raramente" data-score="0">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Raramente</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q3" value="nunca" data-score="0">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Nunca</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q3" value="nao_realizamos" data-score="0">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Não realizamos treinamentos em IA</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label class="question-label">
+                            Os treinamentos realizados resultaram em projetos reais aplicados?
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q4" value="sim_diretamente" data-score="2">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Sim, diretamente aplicados</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q4" value="parcialmente" data-score="1">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Parcialmente aplicados</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q4" value="nao_teoria" data-score="0">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Não, ficaram só na teoria</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q4" value="nao_realizamos_treino" data-score="0">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Não realizamos treinamentos</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q4" value="nao_sei_informar_q4" data-score="1">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Não sei informar</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button type="button" class="btn btn-primary" onclick="nextSection()">
+                            Próxima Etapa
+                            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Bloco 2: Dificuldades -->
+                <section class="form-section" id="section2">
+                    <div class="section-header">
+                        <h2 class="section-title">Principais Dificuldades</h2>
+                        <p class="section-description">Identifique os maiores desafios na implementação de IA</p>
+                    </div>
+
+                    <div class="question-group">
+                        <label class="question-label">
+                            Qual é o principal desafio ao tentar implementar ou utilizar inteligência artificial (IA) em sua empresa/carreira hoje?
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q5" value="falta_conhecimento" data-score="1">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Falta de conhecimento técnico aprofundado na equipe</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q5" value="dificuldade_profissionais" data-score="1">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Dificuldade em encontrar profissionais preparados para aplicar IA de forma prática no seu negócio</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q5" value="alto_custo" data-score="0">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Alto custo de consultorias ou soluções prontas de IA</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q5" value="dificuldade_roi" data-score="0">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Dificuldade em medir o retorno sobre o investimento (ROI) de projetos de IA</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q5" value="falta_estrategia" data-score="1">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Falta de uma estratégia clara de IA ou priorização de projetos</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label class="question-label">
+                            Quão difícil é encontrar profissionais preparados para aplicar IA de forma prática no seu negócio?
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q6" value="muito_facil" data-score="0">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">1 - Muito fácil</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q6" value="facil" data-score="0">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">2 - Fácil</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q6" value="razoavel" data-score="1">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">3 - Razoável</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q6" value="dificil" data-score="1">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">4 - Difícil</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q6" value="muito_dificil" data-score="2">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">5 - Muito difícil</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="prevSection()">
+                            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                            Voltar
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="nextSection()">
+                            Próxima Etapa
+                            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Bloco 3: Expectativas -->
+                <section class="form-section" id="section3">
+                    <div class="section-header">
+                        <h2 class="section-title">Expectativas e Investimento</h2>
+                        <p class="section-description">Entenda suas perspectivas futuras com IA</p>
+                    </div>
+
+                    <div class="question-group">
+                        <label class="question-label">
+                            Quais são as suas expectativas em relação ao uso da IA em sua empresa/carreira nos próximos 12 meses? (Selecione todas que se aplicam)
+                        </label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q7" value="eficiencia_operacional" data-score="2">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">Aumentar a eficiência operacional</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q7" value="novos_produtos" data-score="2">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">Desenvolver novos produtos ou serviços</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q7" value="tomada_decisoes" data-score="1">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">Melhorar a tomada de decisões</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q7" value="reduzir_custos" data-score="1">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">Reduzir custos</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q7" value="vantagem_competitiva" data-score="2">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">Ganhar vantagem competitiva</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="q7" value="sem_expectativas" data-score="0">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">Não tenho expectativas claras</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label class="question-label">
+                            Você estaria disposto(a) a investir em soluções de IA personalizadas para sua empresa/carreira?
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="q8" value="sim_certeza" data-score="2">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Sim, com certeza</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q8" value="talvez_custo_beneficio" data-score="1">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Talvez, dependendo do custo-benefício</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="q8" value="nao_momento" data-score="0">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text">Não, no momento não</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="navigation-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="prevSection()">
+                            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                            Voltar
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="calculateResults()">
+                            Ver Resultados
+                            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12l2 2 4-4"/>
+                            </svg>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Seção de Resultados -->
+                <section class="form-section" id="results">
+                    <div class="results-content">
+                        <div class="results-header">
+                            <h2 class="results-title" id="resultsTitle">O Perfil da Sua Empresa Para Uso de IA</h2>
+                            <div class="results-badge" id="resultsBadge">
+                                <span id="leadTypeText">Pronta Para Começar Com IA</span>
+                            </div>
+                        </div>
+                        
+                        <div class="results-description" id="resultsDescription">
+                            <p>Com base nas suas respostas, identificamos um alto potencial de interesse em soluções de IA.</p>
+                        </div>
+
+                        <!-- Formulário de contato (aparece apenas para leads quentes e mornos) -->
+                        <div class="contact-form" id="contactForm" style="display: none;">
+                            <h3 class="contact-title">Receba soluções personalizadas de IA</h3>
+                            <p class="contact-description">Estamos Desenvolvendo Um Projeto Com IA. Deixe seus dados para receber futuros conteúdos exclusivos e propostas de soluções de IA para seu negócio.</p>
+                            
+                            <div class="input-group">
+                                <label for="userName" class="input-label">Nome completo</label>
+                                <input type="text" id="userName" name="userName" class="form-input" placeholder="Digite seu nome completo">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="userEmail" class="input-label">E-mail</label>
+                                <input type="email" id="userEmail" name="userEmail" class="form-input" placeholder="Digite seu melhor e-mail">
+                            </div>
+                        </div>
+
+                        <!-- Recompensa -->
+                        <div class="reward-section">
+                            <div class="reward-card">
+                                <div class="reward-icon">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14,2 14,8 20,8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                        <polyline points="10,9 9,9 8,9"/>
+                                    </svg>
+                                </div>
+                                <h3 class="reward-title">Biblioteca de Prompts de IA para Negócios</h3>
+                                <p class="reward-description">Receba gratuitamente nossa biblioteca exclusiva com prompts práticos para aplicar IA no seu negócio.</p>
+                                <button type="button" class="btn btn-reward" onclick="downloadReward()">
+                                    <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="7,10 12,15 17,10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                    Baixar Biblioteca Gratuita
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="final-actions">
+                            <button type="button" class="btn btn-primary btn-large" onclick="submitForm()">
+                                Quero receber soluções com IA
+                                <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 2L11 13"/>
+                                    <path d="M22 2l-7 20-4-9-9-4z"/>
+                                </svg>
+                            </button>
+                            <p class="privacy-note">Seus dados estão seguros e não serão compartilhados com terceiros.</p>
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </main>
+
+        <!-- Loading overlay -->
+        <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p>Processando suas respostas...</p>
+            </div>
+        </div>
+
+        <!-- Success message -->
+        <div class="success-message" id="successMessage" style="display: none;">
+            <div class="success-content">
+                <div class="success-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22,4 12,14.01 9,11.01"/>
+                    </svg>
+                </div>
+                <h3>Obrigado pela participação!</h3>
+                <p>Suas respostas foram registradas com sucesso. Em breve você receberá conteúdos exclusivos sobre IA.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
