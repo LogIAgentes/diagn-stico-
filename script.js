@@ -82,32 +82,24 @@ function calculateResults() {
 
     // Determinar tipo de lead
     let leadType = 'frio';
-    let leadText = 'Baixo potencial de interesse em IA';
-    let leadDescription = 'Suas respostas indicam que sua empresa ainda não está focada em adotar soluções de IA. Continue explorando para descobrir como a IA pode ajudar!';
-    if (score >= 4) {
+    let leadDescription = 'Suas respostas indicam um perfil com baixo engajamento, pouca disposição para investir ou implementar mudanças, e/ou sem expectativas claras para o futuro. Continue explorando para descobrir como a IA pode ajudar seu negócio!';
+    if (score >= 13.3) {
         leadType = 'quente';
-        leadText = 'Pronto para usar soluções com IA';
-        leadDescription = 'Com base nas suas respostas, identificamos um alto potencial de interesse em soluções de IA. Sua empresa está pronta para explorar oportunidades avançadas!';
-    } else if (score >= 2) {
+        leadDescription = 'Parabéns! Suas respostas mostram um perfil altamente engajado, com histórico de investimento, interesse em inovação, expectativas claras e disposição para investir. Sua empresa está pronta para transformar seu negócio com IA!';
+    } else if (score >= 7.7) {
         leadType = 'morno';
-        leadText = 'Interesse moderado em IA';
-        leadDescription = 'Suas respostas mostram um potencial moderado para adotar IA. Com as soluções certas, sua empresa pode dar o próximo passo!';
+        leadDescription = 'Suas respostas indicam um perfil com algum interesse e abertura a mudanças, mas ainda com limitações ou incertezas em relação ao investimento e à implementação. Com as soluções certas, sua empresa pode aproveitar melhor a IA!';
     }
 
     // Preencher campos ocultos
     document.getElementById('leadType').value = leadType;
-    document.getElementById('leadScore').value = score;
+    document.getElementById('leadScore').value = score.toFixed(1);
 
     // Atualizar seção de resultados
-    document.getElementById('leadTypeText').textContent = leadText;
     document.getElementById('resultsText').textContent = leadDescription;
 
-    // Mostrar formulário de contato para leads quentes e mornos
-    if (leadType === 'quente' || leadType === 'morno') {
-        document.getElementById('contactForm').style.display = 'block';
-    } else {
-        document.getElementById('contactForm').style.display = 'none';
-    }
+    // Mostrar formulário de contato apenas para leads quentes e mornos
+    document.getElementById('contactForm').style.display = (leadType === 'quente' || leadType === 'morno') ? 'block' : 'none';
 
     // Mostrar seção de resultados
     document.getElementById(`section${currentSection}`).classList.remove('active');
@@ -117,8 +109,7 @@ function calculateResults() {
 }
 
 function downloadReward() {
-    // Substitua pelo link real do PDF (hospedado no Google Drive, por exemplo)
-    window.open('https://drive.google.com/file/d/18UX4I0amlZkebsLvEya_j665Q42bhN6A/view?usp=drive_link', '_blank');
+    window.open('https://drive.google.com/uc?export=download&id=18UX4I0amlZkebsLvEya_j665Q42bhN6A', '_blank');
 }
 
 function submitForm() {
@@ -128,16 +119,41 @@ function submitForm() {
 
     // Validar nome e email para leads quentes e mornos
     if ((leadType === 'quente' || leadType === 'morno') && (!userName || !userEmail)) {
-        alert('Por favor, preencha seu nome e email para continuar.');
+        document.getElementById('results').classList.remove('active');
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('errorMessage').querySelector('p').textContent = 'Por favor, preencha seu nome e email para continuar.';
         return;
     }
 
     document.getElementById('loadingOverlay').style.display = 'flex';
-    setTimeout(() => {
-        document.getElementById('leadForm').submit();
+    const form = document.getElementById('leadForm');
+    const formData = new FormData(form);
+
+    fetch('/', {
+        method: 'POST',
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData).toString()
+    })
+    .then(response => {
+        if (response.ok) {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('successMessage').style.display = 'block';
+        } else {
+            throw new Error('Erro ao enviar o formulário');
+        }
+    })
+    .catch(error => {
         document.getElementById('loadingOverlay').style.display = 'none';
-        document.getElementById('successMessage').style.display = 'block';
-    }, 1000);
+        document.getElementById('results').classList.remove('active');
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('errorMessage').querySelector('p').textContent = 'Não foi possível enviar suas respostas. Tente novamente mais tarde.';
+    });
+}
+
+function retrySubmit() {
+    document.getElementById('errorMessage').style.display = 'none';
+    document.getElementById('results').classList.add('active');
 }
 
 // Inicializar progresso
