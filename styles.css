@@ -1,215 +1,331 @@
-let currentSection = 1;
-const totalSections = 3;
-
-function updateProgress() {
-    const progressPercentage = (currentSection / totalSections) * 100;
-    document.getElementById('progressFill').style.width = `${progressPercentage}%`;
-    document.getElementById('progressText').textContent = `Etapa ${currentSection} de ${totalSections}`;
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
 }
 
-function nextSection() {
-    if (currentSection < totalSections + 1) {
-        document.getElementById(`section${currentSection}`).classList.remove('active');
-        currentSection++;
-        if (currentSection <= totalSections) {
-            document.getElementById(`section${currentSection}`).classList.add('active');
-        } else {
-            document.getElementById('results').classList.add('active');
-        }
-        updateProgress();
-    }
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-function prevSection() {
-    if (currentSection > 1) {
-        document.getElementById(`section${currentSection}`).classList.remove('active');
-        currentSection--;
-        document.getElementById(`section${currentSection}`).classList.add('active');
-        updateProgress();
-    }
+.header-content {
+    text-align: center;
+    padding: 40px 0;
 }
 
-function calculateResults() {
-    let score = 0;
-
-    // Pergunta 1
-    const q1 = document.querySelector('input[name="q1"]:checked');
-    if (q1) {
-        score += parseInt(q1.getAttribute('data-score'));
-    }
-
-    // Pergunta 2
-    const q2 = document.querySelector('input[name="q2"]:checked');
-    if (q2) {
-        score += parseInt(q2.getAttribute('data-score'));
-    }
-
-    // Pergunta 3
-    const q3 = document.querySelector('input[name="q3"]:checked');
-    if (q3) {
-        score += parseInt(q3.getAttribute('data-score'));
-    }
-
-    // Pergunta 4
-    const q4 = document.querySelector('input[name="q4"]:checked');
-    if (q4) {
-        score += parseInt(q4.getAttribute('data-score'));
-    }
-
-    // Pergunta 5
-    const q5 = document.querySelector('input[name="q5"]:checked');
-    if (q5) {
-        score += parseInt(q5.getAttribute('data-score'));
-    }
-
-    // Pergunta 6
-    const q6 = document.querySelector('input[name="q6"]:checked');
-    if (q6) {
-        score += parseInt(q6.getAttribute('data-score'));
-    }
-
-    // Pergunta 7 (checkboxes)
-    const q7 = document.querySelectorAll('input[name="q7"]:checked');
-    q7.forEach(checkbox => {
-        score += parseInt(checkbox.getAttribute('data-score'));
-    });
-
-    // Pergunta 8
-    const q8 = document.querySelector('input[name="q8"]:checked');
-    if (q8) {
-        score += parseInt(q8.getAttribute('data-score'));
-    }
-
-    // Determinar tipo de lead
-    let leadType = 'frio';
-    let leadDescription = 'Suas respostas indicam um perfil com baixo engajamento, pouca disposição para investir ou implementar mudanças, e/ou sem expectativas claras para o futuro. Continue explorando para descobrir como a IA pode ajudar seu negócio!';
-    if (score >= 13.3) {
-        leadType = 'quente';
-        leadDescription = 'Parabéns! Suas respostas mostram um perfil altamente engajado, com histórico de investimento, interesse em inovação, expectativas claras e disposição para investir. Sua empresa está pronta para transformar seu negócio com IA!';
-    } else if (score >= 7.7) {
-        leadType = 'morno';
-        leadDescription = 'Suas respostas indicam um perfil com algum interesse e abertura a mudanças, mas ainda com limitações ou incertezas em relação ao investimento e à implementação. Com as soluções certas, sua empresa pode aproveitar melhor a IA!';
-    }
-
-    // Preencher campos ocultos
-    const leadTypeInput = document.getElementById('leadType');
-    const leadScoreInput = document.getElementById('leadScore');
-    if (leadTypeInput && leadScoreInput) {
-        leadTypeInput.value = leadType;
-        leadScoreInput.value = score.toFixed(1);
-    } else {
-        console.error('Campos leadType ou leadScore não encontrados');
-    }
-
-    // Atualizar seção de resultados
-    const resultsText = document.getElementById('resultsText');
-    if (resultsText) {
-        resultsText.textContent = leadDescription;
-        resultsText.style.display = 'block';
-        console.log('Mensagem de resultado definida:', leadDescription);
-    } else {
-        console.error('Elemento resultsText não encontrado');
-    }
-
-    // Mostrar formulário de contato apenas para leads quentes e mornos
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.style.display = (leadType === 'quente' || leadType === 'morno') ? 'block' : 'none';
-        console.log('Formulário de contato:', contactForm.style.display);
-    } else {
-        console.error('Elemento contactForm não encontrado');
-    }
-
-    // Mostrar seção de resultados
-    document.getElementById(`section${currentSection}`).classList.remove('active');
-    const resultsSection = document.getElementById('results');
-    if (resultsSection) {
-        resultsSection.classList.add('active');
-        console.log('Seção de resultados exibida');
-    } else {
-        console.error('Seção results não encontrada');
-    }
-    currentSection = totalSections + 1;
-    updateProgress();
+.main-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
 }
 
-function downloadReward() {
-    console.log('Tentando baixar PDF');
-    window.open('https://drive.google.com/uc?export=download&id=18UX4I0amlZkebsLvEya_j665Q42bhN6A', '_blank');
+.subtitle {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 20px;
 }
 
-function submitForm() {
-    const leadType = document.getElementById('leadType').value;
-    const userName = document.getElementById('userName').value;
-    const userEmail = document.getElementById('userEmail').value;
-    const errorMessage = document.getElementById('errorMessage');
-
-    // Validar nome e email para leads quentes e mornos
-    if ((leadType === 'quente' || leadType === 'morno') && (!userName || !userEmail)) {
-        if (errorMessage) {
-            document.getElementById('results').classList.remove('active');
-            errorMessage.style.display = 'block';
-            errorMessage.querySelector('#errorText').textContent = 'Por favor, preencha seu nome e email para continuar.';
-            console.log('Erro: Nome ou email não preenchidos');
-        }
-        return;
-    }
-
-    // Mock de envio local (Netlify Forms só funciona após deploy)
-    const isLocal = window.location.protocol === 'file:';
-    if (isLocal) {
-        console.log('Ambiente local detectado. Simulando envio do formulário.');
-        document.getElementById('loadingOverlay').style.display = 'flex';
-        setTimeout(() => {
-            document.getElementById('loadingOverlay').style.display = 'none';
-            document.getElementById('results').classList.remove('active');
-            document.getElementById('successMessage').style.display = 'block';
-            console.log('Simulação de envio bem-sucedida');
-        }, 1000);
-        return;
-    }
-
-    // Envio real para Netlify
-    document.getElementById('loadingOverlay').style.display = 'flex';
-    const form = document.getElementById('leadForm');
-    const formData = new FormData(form);
-
-    fetch('/', {
-        method: 'POST',
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData).toString()
-    })
-    .then(response => {
-        if (response.ok) {
-            document.getElementById('loadingOverlay').style.display = 'none';
-            document.getElementById('results').classList.remove('active');
-            document.getElementById('successMessage').style.display = 'block';
-            console.log('Formulário enviado com sucesso');
-        } else {
-            throw new Error('Erro ao enviar o formulário');
-        }
-    })
-    .catch(error => {
-        document.getElementById('loadingOverlay').style.display = 'none';
-        document.getElementById('results').classList.remove('active');
-        if (errorMessage) {
-            errorMessage.style.display = 'block';
-            errorMessage.querySelector('#errorText').textContent = 'Não foi possível enviar suas respostas. Tente novamente mais tarde.';
-            console.log('Erro no envio:', error);
-        }
-    });
+.progress-bar {
+    background-color: #e0e0e0;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 10px;
 }
 
-function retrySubmit() {
-    const errorMessage = document.getElementById('errorMessage');
-    if (errorMessage) {
-        errorMessage.style.display = 'none';
-    }
-    const resultsSection = document.getElementById('results');
-    if (resultsSection) {
-        resultsSection.classList.add('active');
-    }
+.progress-fill {
+    background-color: #007bff;
+    height: 100%;
+    width: 0;
+    transition: width 0.3s ease;
 }
 
-// Inicializar progresso
-updateProgress();
+.progress-text {
+    font-size: 14px;
+    color: #666;
+}
+
+.form-section {
+    display: none;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-section.active {
+    display: block;
+}
+
+.section-header {
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.section-description {
+    font-size: 16px;
+    color: #666;
+}
+
+.question-group {
+    margin-bottom: 20px;
+}
+
+.question-label {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.radio-group, .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.radio-option, .checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.radio-custom, .checkbox-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #007bff;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkbox-custom {
+    border-radius: 4px;
+}
+
+.radio-option input:checked + .radio-custom::after,
+.checkbox-option input:checked + .checkbox-custom::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background-color: #007bff;
+    border-radius: 50%;
+    display: block;
+}
+
+.checkbox-option input:checked + .checkbox-custom::after {
+    border-radius: 2px;
+}
+
+.radio-text, .checkbox-text {
+    font-size: 16px;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.btn-reward {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.btn-large {
+    padding: 12px 24px;
+    font-size: 18px;
+}
+
+.results-content {
+    text-align: center;
+}
+
+.results-title {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.results-description {
+    margin-bottom: 20px;
+}
+
+#resultsText {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    font-size: 16px;
+    color: #333;
+    min-height: 50px;
+}
+
+.contact-form {
+    display: none;
+    margin-bottom: 20px;
+}
+
+.contact-form.active {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.contact-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.contact-description {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.reward-section {
+    margin-bottom: 20px;
+}
+
+.reward-card {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.reward-icon {
+    margin-bottom: 10px;
+}
+
+.reward-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.reward-description {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.final-actions {
+    margin-top: 20px;
+}
+
+.privacy-note {
+    font-size: 14px;
+    color: #666;
+    margin-top: 10px;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-spinner {
+    text-align: center;
+    color: #fff;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #fff;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.success-message, .error-message {
+    display: none;
+    text-align: center;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.success-content, .error-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.success-icon, .error-icon {
+    margin-bottom: 10px;
+}
+
+.success-message h3, .error-message h3 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.success-message p, .error-message p {
+    font-size: 16px;
+    color: #666;
+}
