@@ -156,57 +156,59 @@ function submitForm() {
 
     document.getElementById('loadingOverlay').style.display = 'flex'; // Mostra o spinner de carregamento
 
-    // Coletar todos os dados do formulário
     const formData = new FormData();
-    formData.append('entry.SEU_ID_CAMPO_LEAD_TYPE', leadType); // Substitua com o ID real do seu campo leadType
-    formData.append('entry.SEU_ID_CAMPO_LEAD_SCORE', document.getElementById('leadScore').value); // Substitua com o ID real do seu campo leadScore
-    formData.append('entry.SEU_ID_CAMPO_USER_NAME', userName); // Substitua com o ID real do seu campo userName
-    formData.append('entry.SEU_ID_CAMPO_USER_EMAIL', userEmail); // Substitua com o ID real do seu campo userEmail
+    // Adicionando os campos calculados e de contato com seus respectivos IDs do Google Forms
+    formData.append('entry.2041325370', leadType); // Tipo de Lead
+    formData.append('entry.1468627395', document.getElementById('leadScore').value); // Pontuação do Lead
+    formData.append('entry.930013255', userName); // Nome
+    formData.append('entry.957828304', userEmail); // Email
 
-    // Adicionar as respostas das perguntas (q1 a q8)
-    // VOCÊ PRECISARÁ ENCONTRAR OS IDS PARA CADA PERGUNTA (entry.SEU_ID_CAMPO_Qx)
-    // Exemplo:
-    // const q1 = document.querySelector('input[name="q1"]:checked');
-    // if (q1) formData.append('entry.SEU_ID_CAMPO_Q1', q1.value);
+    // Adicionando as respostas das perguntas do questionário (q1 a q8)
+    // Para campos de rádio (q1 a q6 e q8): pegamos o valor da opção selecionada
+    const q1 = document.querySelector('input[name="q1"]:checked');
+    if (q1) formData.append('entry.209227467', q1.value);
 
-    // *** IMPORTANTE: Você precisa encontrar os IDs dos campos do Google Forms ***
-    // O Google Forms usa IDs como "entry.123456789" para cada campo.
-    // Para encontrar esses IDs:
-    // 1. Abra seu Google Form (em modo de preenchimento, como se fosse um usuário).
-    // 2. Clique com o botão direito no campo que deseja (ex: nome, email, pergunta 1) e selecione "Inspecionar" (ou "Inspecionar Elemento").
-    // 3. Procure por um atributo `name` no input que se parece com `name="entry.123456789"`.
-    //    O número (ex: 123456789) é o ID que você precisa.
-    // Você fará isso para leadType, leadScore, userName, userEmail e todas as suas 8 perguntas (q1 a q8).
+    const q2 = document.querySelector('input[name="q2"]:checked');
+    if (q2) formData.append('entry.197925262', q2.value);
 
-    // Exemplo de como ficaria com IDs hipotéticos (SUBSTITUA PELOS SEUS REAIS):
-    // formData.append('entry.123456789', leadType); // leadType
-    // formData.append('entry.987654321', document.getElementById('leadScore').value); // leadScore
-    // formData.append('entry.111222333', userName); // userName
-    // formData.append('entry.444555666', userEmail); // userEmail
+    const q3 = document.querySelector('input[name="q3"]:checked');
+    if (q3) formData.append('entry.529711471', q3.value);
 
-    // const q1 = document.querySelector('input[name="q1"]:checked');
-    // if (q1) formData.append('entry.ID_DO_CAMPO_Q1', q1.value); // Use q1.value para pegar o valor do radio
-    // ... repita para q2, q3, etc.
-    // Para checkboxes (como q7), você precisará fazer um loop:
-    // const q7 = document.querySelectorAll('input[name="q7"]:checked');
-    // q7.forEach(checkbox => {
-    //     formData.append('entry.ID_DO_CAMPO_Q7', checkbox.value); // O Google Forms pode aceitar múltiplos valores para o mesmo ID para checkboxes
-    // });
+    const q4 = document.querySelector('input[name="q4"]:checked');
+    if (q4) formData.append('entry.1922429230', q4.value);
 
+    const q5 = document.querySelector('input[name="q5"]:checked');
+    if (q5) formData.append('entry.1101591931', q5.value);
 
-    fetch('https://docs.google.com/forms/d/e/1FAIpQLSeyIolUOSjvEo_GfgPqbS-X_9J_pwjLrQykVfUZtS-Nc6T7Zg/formResponse', {
+    const q6 = document.querySelector('input[name="q6"]:checked');
+    if (q6) formData.append('entry.813772358', q6.value);
+
+    // Para checkboxes (q7): precisamos iterar e adicionar cada valor marcado
+    const q7 = document.querySelectorAll('input[name="q7"]:checked');
+    q7.forEach(checkbox => {
+        formData.append('entry.1419611589', checkbox.value);
+    });
+
+    const q8 = document.querySelector('input[name="q8"]:checked');
+    if (q8) formData.append('entry.783937939', q8.value);
+
+    // URL de submissão do seu Google Form
+    const googleFormsSubmitUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSeyIolUOSjvEo_GfgPqbS-X_9J_pwjLrQykVfUZtS-Nc6T7Zg/formResponse';
+
+    fetch(googleFormsSubmitUrl, {
         method: 'POST',
         body: formData,
-        mode: 'no-cors' // Modo no-cors é necessário para enviar para o Google Forms de forma simples
+        mode: 'no-cors' // Essencial para permitir o envio cross-origin para o Google Forms
     })
     .then(() => {
-        // O Google Forms sempre retorna um sucesso (status 200) mesmo com no-cors,
-        // então não podemos verificar response.ok diretamente.
+        // O Google Forms sempre retorna sucesso com 'no-cors', não podemos verificar 'response.ok'.
         // Assumimos sucesso se não houver erro de rede.
         document.getElementById('loadingOverlay').style.display = 'none';
-        document.getElementById('results').classList.remove('active'); // Oculta a seção de resultados se ela estiver ativa
+        document.getElementById('results').classList.remove('active'); // Oculta a seção de resultados
         document.getElementById('successMessage').style.display = 'block'; // Mostra a mensagem de sucesso
         console.log('Formulário enviado com sucesso para o Google Forms!');
+        // Opcional: Limpar o formulário ou redirecionar
+        // document.getElementById('leadForm').reset();
     })
     .catch(error => {
         document.getElementById('loadingOverlay').style.display = 'none';
@@ -218,19 +220,6 @@ function submitForm() {
         }
     });
 }
-
-// A função retrySubmit() pode ser mantida como está, mas pode não ser necessária se o envio for bem-sucedido.
-// function retrySubmit() {
-//     const errorMessage = document.getElementById('errorMessage');
-//     if (errorMessage) {
-//         errorMessage.style.display = 'none';
-//     }
-//     const resultsSection = document.getElementById('results');
-//     if (resultsSection) {
-//         resultsSection.classList.add('active');
-//     }
-//     console.log('Tentando novamente');
-// }
 
 // Inicializar progresso
 updateProgress();
