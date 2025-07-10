@@ -13,23 +13,25 @@ function updateProgress() {
 
 // ** FUNÇÃO nextSection() CORRIGIDA **
 function nextSection() {
-    // **VALIDAÇÃO: Verificar se as respostas da seção atual foram selecionadas antes de avançar**
+    // VALIDAÇÃO: Verificar se as respostas da seção atual foram selecionadas antes de avançar
     const currentSectionElement = document.getElementById(`section${currentSection}`);
     let allQuestionsAnswered = true;
 
     if (currentSectionElement) {
         // Encontrar todas as perguntas nesta seção
-        const questionsInCurrentSection = currentSectionElement.querySelectorAll('.question-block'); // Assumindo que cada pergunta está dentro de um div/bloco com essa classe
+        // Importante: Assumimos que cada pergunta está dentro de um div/bloco com a classe 'question-block'
+        const questionBlocksInCurrentSection = currentSectionElement.querySelectorAll('.question-block');
         
-        questionsInCurrentSection.forEach(questionBlock => {
-            const questionName = questionBlock.querySelector('input[type="radio"], input[type="checkbox"]').name;
-            if (questionName) {
+        questionBlocksInCurrentSection.forEach(questionBlock => {
+            const radioOrCheckboxInput = questionBlock.querySelector('input[type="radio"], input[type="checkbox"]');
+            if (radioOrCheckboxInput && radioOrCheckboxInput.name) {
+                const questionName = radioOrCheckboxInput.name;
                 // Verificar se alguma opção foi selecionada para esta pergunta
                 const answered = document.querySelector(`input[name="${questionName}"]:checked`);
                 if (!answered) {
                     allQuestionsAnswered = false;
+                    // console.log(`Pergunta ${questionName} não respondida na seção ${currentSection}`);
                     // Opcional: Adicionar feedback visual aqui, como mudar a borda da pergunta não respondida
-                    console.log(`Pergunta ${questionName} não respondida na seção ${currentSection}`);
                 }
             }
         });
@@ -41,28 +43,28 @@ function nextSection() {
     }
     // Fim da validação
 
-    if (currentSection < totalSections) { // Altera a condição para ir até a penúltima seção
+    if (currentSection < totalSections) { // Altera a condição para ir até a penúltima seção de perguntas
         const current = document.getElementById(`section${currentSection}`);
         if (current) current.classList.remove('active');
         currentSection++;
         const next = document.getElementById(`section${currentSection}`);
         if (next) next.classList.add('active');
         updateProgress();
-    } else if (currentSection === totalSections) { // Na última seção de perguntas, chama calculateResults
+    } else if (currentSection === totalSections) { // Na última seção de perguntas (totalSections), chama calculateResults
         const current = document.getElementById(`section${currentSection}`);
         if (current) current.classList.remove('active');
         
         // Chamada para calculateResults (que agora exibe a seção de resultados)
         calculateResults(); 
         
-        // A section de resultados já é ativada dentro de calculateResults
-        // Não é necessário currentSection++ aqui, pois calculateResults já define a seção final
+        // A section de resultados já é ativada dentro de calculateResults.
+        // currentSection já é atualizado para totalSections + 1 dentro de calculateResults.
     }
 }
 
 
 function prevSection() {
-    if (currentSection > 1 && currentSection <= totalSections + 1) { // Garante que não volte da tela de sucesso
+    if (currentSection > 1 && currentSection <= totalSections + 1) { // Garante que não volte da tela de sucesso (se currentSection for totalSections + 2)
         const current = document.getElementById(`section${currentSection}`);
         if (current) current.classList.remove('active');
         
@@ -79,10 +81,7 @@ function prevSection() {
     }
 }
 
-// ** FUNÇÃO calculateResults() REAJUSTADA **
-// Agora ela apenas calcula, determina o lead, preenche os campos ocultos,
-// atualiza o texto de resultados e mostra/oculta o formulário de contato.
-// O envio REAL para o Google Forms fica apenas no `submitForm()`.
+// ** FUNÇÃO calculateResults() - SEM O ENVIO DE DADOS, APENAS LÓGICA DA UI **
 function calculateResults() {
     let score = 0;
 
@@ -180,7 +179,7 @@ function downloadReward() {
     window.open('https://drive.google.com/uc?export=download&id=18UX4I0amlZkebsLvEya_j665Q42bhN6A', '_blank');
 }
 
-// ** FUNÇÃO submitForm() (FINAL DO FORMULÁRIO) - RESPONSÁVEL POR ENVIAR TUDO **
+// ** FUNÇÃO submitForm() - RESPONSÁVEL POR ENVIAR TODOS OS DADOS **
 async function submitForm() {
     const leadType = document.getElementById('leadType').value;
     const userName = document.getElementById('userName').value || '';
@@ -208,33 +207,34 @@ async function submitForm() {
     formData.append('entry.930013255', userName); // Nome
     formData.append('entry.957828304', userEmail); // Email
 
+    // ** Não redeclarar q1, q2, etc. Use-os diretamente **
     // Adicionando as respostas das perguntas
-    const q1 = document.querySelector('input[name="q1"]:checked');
-    if (q1) formData.append('entry.209227467', q1.value);
+    const q1Value = document.querySelector('input[name="q1"]:checked')?.value;
+    if (q1Value) formData.append('entry.209227467', q1Value);
 
-    const q2 = document.querySelector('input[name="q2"]:checked');
-    if (q2) formData.append('entry.197925262', q2.value);
+    const q2Value = document.querySelector('input[name="q2"]:checked')?.value;
+    if (q2Value) formData.append('entry.197925262', q2Value);
 
-    const q3 = document.querySelector('input[name="q3"]:checked');
-    if (q3) formData.append('entry.529711471', q3.value);
+    const q3Value = document.querySelector('input[name="q3"]:checked')?.value;
+    if (q3Value) formData.append('entry.529711471', q3Value);
 
-    const q4 = document.querySelector('input[name="q4"]:checked');
-    if (q4) formData.append('entry.1922429230', q4.value);
+    const q4Value = document.querySelector('input[name="q4"]:checked')?.value;
+    if (q4Value) formData.append('entry.1922429230', q4Value);
 
-    const q5 = document.querySelector('input[name="q5"]:checked');
-    if (q5) formData.append('entry.1101591931', q5.value);
+    const q5Value = document.querySelector('input[name="q5"]:checked')?.value;
+    if (q5Value) formData.append('entry.1101591931', q5Value);
 
-    const q6 = document.querySelector('input[name="q6"]:checked');
-    if (q6) formData.append('entry.813772358', q6.value);
+    const q6Value = document.querySelector('input[name="q6"]:checked')?.value;
+    if (q6Value) formData.append('entry.813772358', q6Value);
 
     // Para checkboxes (q7)
-    const q7 = document.querySelectorAll('input[name="q7"]:checked');
-    q7.forEach(checkbox => {
+    const q7Checkboxes = document.querySelectorAll('input[name="q7"]:checked');
+    q7Checkboxes.forEach(checkbox => {
         formData.append('entry.1419611589', checkbox.value);
     });
 
-    const q8 = document.querySelector('input[name="q8"]:checked');
-    if (q8) formData.append('entry.783937939', q8.value);
+    const q8Value = document.querySelector('input[name="q8"]:checked')?.value;
+    if (q8Value) formData.append('entry.783937939', q8Value);
 
     // Log dos dados enviados para depuração
     console.log('Dados do formulário FINAL a serem enviados:', Object.fromEntries(formData));
