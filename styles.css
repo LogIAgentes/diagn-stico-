@@ -660,8 +660,8 @@ body {
 /* Adicione este código no seu arquivo styles.css */
 
 .site-logo {
-    max-width: 250px; /* Ajuste o tamanho conforme necessário para o seu layout */
-    height: auto; /* Mantém a proporção da imagem */
-    margin: 20px auto; /* Centraliza e adiciona margem superior/inferior */
+    max-width: 180px; /* Tente reduzir para um valor menor, como 180px ou 150px */
+    height: auto; /* Essencial para manter a proporção */
+    margin: 10px auto; /* Reduza as margens superior/inferior se ainda estiver muito espaçado */
     display: block; /* Garante que o logo ocupe sua própria linha */
 }
