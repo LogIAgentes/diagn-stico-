@@ -11,36 +11,79 @@ function updateProgress() {
     }
 }
 
+// ** FUNÇÃO nextSection() CORRIGIDA **
 function nextSection() {
-    if (currentSection < totalSections + 1) {
+    // **VALIDAÇÃO: Verificar se as respostas da seção atual foram selecionadas antes de avançar**
+    const currentSectionElement = document.getElementById(`section${currentSection}`);
+    let allQuestionsAnswered = true;
+
+    if (currentSectionElement) {
+        // Encontrar todas as perguntas nesta seção
+        const questionsInCurrentSection = currentSectionElement.querySelectorAll('.question-block'); // Assumindo que cada pergunta está dentro de um div/bloco com essa classe
+        
+        questionsInCurrentSection.forEach(questionBlock => {
+            const questionName = questionBlock.querySelector('input[type="radio"], input[type="checkbox"]').name;
+            if (questionName) {
+                // Verificar se alguma opção foi selecionada para esta pergunta
+                const answered = document.querySelector(`input[name="${questionName}"]:checked`);
+                if (!answered) {
+                    allQuestionsAnswered = false;
+                    // Opcional: Adicionar feedback visual aqui, como mudar a borda da pergunta não respondida
+                    console.log(`Pergunta ${questionName} não respondida na seção ${currentSection}`);
+                }
+            }
+        });
+    }
+
+    if (!allQuestionsAnswered) {
+        alert('Por favor, responda a todas as perguntas para continuar.');
+        return; // Impede o avanço se nem todas as perguntas foram respondidas
+    }
+    // Fim da validação
+
+    if (currentSection < totalSections) { // Altera a condição para ir até a penúltima seção
         const current = document.getElementById(`section${currentSection}`);
         if (current) current.classList.remove('active');
         currentSection++;
-        if (currentSection <= totalSections) {
-            const next = document.getElementById(`section${currentSection}`);
-            if (next) next.classList.add('active');
-        } else {
-            // Este else block é para quando clica em 'Próxima Etapa' na última seção (section3)
-            // Ele deve chamar calculateResults, que agora também fará o envio.
-            calculateResults(); // <--- CHAMA calculateResults AQUI
-        }
+        const next = document.getElementById(`section${currentSection}`);
+        if (next) next.classList.add('active');
         updateProgress();
+    } else if (currentSection === totalSections) { // Na última seção de perguntas, chama calculateResults
+        const current = document.getElementById(`section${currentSection}`);
+        if (current) current.classList.remove('active');
+        
+        // Chamada para calculateResults (que agora exibe a seção de resultados)
+        calculateResults(); 
+        
+        // A section de resultados já é ativada dentro de calculateResults
+        // Não é necessário currentSection++ aqui, pois calculateResults já define a seção final
     }
 }
 
+
 function prevSection() {
-    if (currentSection > 1) {
+    if (currentSection > 1 && currentSection <= totalSections + 1) { // Garante que não volte da tela de sucesso
         const current = document.getElementById(`section${currentSection}`);
         if (current) current.classList.remove('active');
-        currentSection--;
+        
+        // Se estiver na tela de resultados, volte para a última seção de perguntas (totalSections)
+        if (currentSection === totalSections + 1) {
+             currentSection = totalSections;
+        } else {
+             currentSection--;
+        }
+        
         const prev = document.getElementById(`section${currentSection}`);
         if (prev) prev.classList.add('active');
         updateProgress();
     }
 }
 
-// ** FUNÇÃO calculateResults() MODIFICADA PARA ENVIAR OS DADOS **
-async function calculateResults() {
+// ** FUNÇÃO calculateResults() REAJUSTADA **
+// Agora ela apenas calcula, determina o lead, preenche os campos ocultos,
+// atualiza o texto de resultados e mostra/oculta o formulário de contato.
+// O envio REAL para o Google Forms fica apenas no `submitForm()`.
+function calculateResults() {
     let score = 0;
 
     // Pergunta 1
@@ -99,84 +142,7 @@ async function calculateResults() {
         console.error('Campos leadType ou leadScore não encontrados');
     }
 
-    // Mostrar formulário de contato apenas para leads quentes e mornos
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.style.display = (leadType === 'quente' || leadType === 'morno') ? 'block' : 'none';
-        console.log('Formulário de contato:', contactForm.style.display);
-    } else {
-        console.error('Elemento contactForm não encontrado');
-    }
-
-    // ** LÓGICA DE ENVIO DO FORMULÁRIO MOVIDA PARA AQUI **
-    document.getElementById('loadingOverlay').style.display = 'flex';
-
-    const formData = new FormData();
-
-    // Adicionando os campos calculados
-    formData.append('entry.2041325370', leadType); // Tipo de Lead
-    formData.append('entry.1468627395', document.getElementById('leadScore').value); // Pontuação do Lead
-
-    // Adicionando as respostas das perguntas
-    const q1 = document.querySelector('input[name="q1"]:checked');
-    if (q1) formData.append('entry.209227467', q1.value);
-
-    const q2 = document.querySelector('input[name="q2"]:checked');
-    if (q2) formData.append('entry.197925262', q2.value);
-
-    const q3 = document.querySelector('input[name="q3"]:checked');
-    if (q3) formData.append('entry.529711471', q3.value);
-
-    const q4 = document.querySelector('input[name="q4"]:checked');
-    if (q4) formData.append('entry.1922429230', q4.value);
-
-    const q5 = document.querySelector('input[name="q5"]:checked');
-    if (q5) formData.append('entry.1101591931', q5.value);
-
-    const q6 = document.querySelector('input[name="q6"]:checked');
-    if (q6) formData.append('entry.813772358', q6.value);
-
-    // Para checkboxes (q7)
-    const q7 = document.querySelectorAll('input[name="q7"]:checked');
-    q7.forEach(checkbox => {
-        formData.append('entry.1419611589', checkbox.value);
-    });
-
-    const q8 = document.querySelector('input[name="q8"]:checked');
-    if (q8) formData.append('entry.783937939', q8.value);
-
-    // ** ATENÇÃO: userName e userEmail SÓ SERÃO ENVIADOS AQUI SE FOREM PREENCHIDOS E A FUNÇÃO for CHAMADA **
-    // Para garantir que eles sejam enviados caso o usuário preencha e clique no botão final,
-    // vamos pegar seus valores *no momento do envio*, mesmo que vazios.
-    // ** Isso será melhor tratado pelo submitForm() ou você pode optar por enviar TUDO aqui. **
-    // Para esta proposta, vamos garantir que só os dados da pesquisa vão AGORA.
-    // Os dados de contato serão coletados pelo outro botão (se você ainda quiser isso).
-
-    // Log dos dados enviados para depuração
-    console.log('Dados do formulário da PESQUISA a serem enviados (no calculateResults):', Object.fromEntries(formData));
-
-    const googleFormsSubmitUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSeyIolUOSjvEo_GfgPqbS-X_9J_pwjLrQykVfUZtS-Nc6T7Zg/formResponse';
-
-    try {
-        await fetch(googleFormsSubmitUrl, {
-            method: 'POST',
-            body: formData,
-            mode: 'no-cors'
-        });
-
-        console.log('Dados da pesquisa enviados para o Google Forms!');
-
-    } catch (error) {
-        console.error('Erro ao enviar dados da pesquisa para o Google Forms:', error);
-        // Não mostrar erro genérico aqui, pois a UI do formulário ainda está ativa.
-        // O erro será notado se não aparecer na planilha.
-    } finally {
-        document.getElementById('loadingOverlay').style.display = 'none'; // Oculta o loading independente do erro.
-    }
-
-    // Fim da lógica de envio em calculateResults()
-
-    // ** ATUALIZAR UI DOS RESULTADOS APÓS TENTATIVA DE ENVIO **
+    // Atualizar seção de resultados
     const resultsText = document.getElementById('resultsText');
     if (resultsText) {
         resultsText.textContent = leadDescription;
@@ -186,6 +152,16 @@ async function calculateResults() {
         console.error('Elemento resultsText não encontrado');
     }
 
+    // Mostrar formulário de contato apenas para leads quentes e mornos
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.style.display = (leadType === 'quente' || leadType === 'morno') ? 'block' : 'none';
+        console.log('Formulário de contato:', contactForm.style.display);
+    } else {
+        console.error('Elemento contactForm não encontrado');
+    }
+
+    // Mostrar seção de resultados
     const current = document.getElementById(`section${currentSection}`);
     if (current) current.classList.remove('active');
     const resultsSection = document.getElementById('results');
@@ -195,80 +171,44 @@ async function calculateResults() {
     } else {
         console.error('Seção results não encontrada');
     }
-    currentSection = totalSections + 1;
+    currentSection = totalSections + 1; // Define a seção atual para a tela de resultados
     updateProgress();
 }
-
 
 function downloadReward() {
     console.log('Tentando baixar PDF');
     window.open('https://drive.google.com/uc?export=download&id=18UX4I0amlZkebsLvEya_j665Q42bhN6A', '_blank');
 }
 
-// ** FUNÇÃO submitForm() MODIFICADA PARA TRATAR APENAS OS DADOS DE CONTATO E DOWNLOAD **
+// ** FUNÇÃO submitForm() (FINAL DO FORMULÁRIO) - RESPONSÁVEL POR ENVIAR TUDO **
 async function submitForm() {
     const leadType = document.getElementById('leadType').value;
     const userName = document.getElementById('userName').value || '';
     const userEmail = document.getElementById('userEmail').value || '';
     const errorMessage = document.getElementById('errorMessage');
 
-    // ** VALIDAR SOMENTE SE PRECISA DO CONTATO (leads quentes/mornos) **
+    // Validar nome e email apenas para leads quentes e mornos
     if ((leadType === 'quente' || leadType === 'morno') && (!userName || !userEmail)) {
         if (errorMessage) {
-            document.getElementById('results').classList.remove('active');
+            document.getElementById('results').classList.remove('active'); // Oculta a seção de resultados temporariamente
             document.getElementById('successMessage').style.display = 'none';
             errorMessage.style.display = 'block';
             errorMessage.querySelector('#errorText').textContent = 'Por favor, preencha seu nome e e-mail para receber soluções personalizadas.';
-            console.log('Erro: Nome ou e-mail não preenchidos para lead quente/morno (no botão final)');
+            console.log('Erro: Nome ou e-mail não preenchidos para lead quente/morno');
         }
         return; // Interrompe a função se a validação falhar
     }
 
-    // Se chegou aqui, ou é lead frio (não precisa de contato) ou lead quente/morno com contato preenchido.
-    // Podemos assumir que a pesquisa já foi enviada por calculateResults().
-    // Agora, o que este botão deve fazer?
-    // 1. Apenas fazer o download (se não precisar do contato extra)
-    // 2. Enviar o contato (se o usuário preencheu) E fazer o download.
-
-    // Vamos fazer este botão ENVIAR os dados de contato (se houver) E acionar o download.
-    // É importante notar que para o Google Forms, isso criaria uma nova linha ou uma linha com "apenas" contato,
-    // o que pode ser confuso. O ideal seria enviar TUDO de uma vez no `calculateResults`.
-
-    // **OPÇÃO A: Se você quer que o botão final APENAS faça o download e mostre sucesso,
-    // e o contato já teria sido enviado em calculateResults (se visível)**
-    // downloadReward();
-    // document.getElementById('results').classList.remove('active');
-    // document.getElementById('successMessage').style.display = 'block';
-    // console.log('Botão final clicado. Download acionado.');
-    // return; // Termina aqui
-
-    // **OPÇÃO B (MAIS ROBUSTA para Google Forms com UM único envio): **
-    // Refatorar para que calculateResults *não* envie e TUDO seja enviado por este botão,
-    // mas a validação do contato seja condicional.
-    // Mas a instrução original era que "a pesquisa deveria ser enviada", o que implica que
-    // o submitForm não seja o único gatilho.
-
-    // **VAMOS MANTER A LÓGICA ATUAL DO ENVIO, mas garantindo que o `formData`
-    // inclua TUDO e que o botão de contato seja opcional no envio.**
-
     document.getElementById('loadingOverlay').style.display = 'flex';
 
     const formData = new FormData();
-    // Adicionando os campos calculados e de contato (agora pegar os valores mais recentes)
+    // Adicionando os campos calculados e de contato
     formData.append('entry.2041325370', leadType); // Tipo de Lead
     formData.append('entry.1468627395', document.getElementById('leadScore').value); // Pontuação do Lead
-    formData.append('entry.930013255', userName); // Nome (pode ser vazio para lead frio)
-    formData.append('entry.957828304', userEmail); // Email (pode ser vazio para lead frio)
+    formData.append('entry.930013255', userName); // Nome
+    formData.append('entry.957828304', userEmail); // Email
 
-    // Re-adicionar as respostas das perguntas (para garantir que estão no envio final)
-    // Isso pode resultar em duplicidade se `calculateResults` já enviou,
-    // mas garante que o `submitForm` tem todos os dados.
-    // **Atenção:** Se `calculateResults` já enviou, este será um NOVO envio no Google Forms.
-    // Se você quer apenas UM registro por pessoa, a `calculateResults` NÃO deveria enviar.
-    // VAMOS REMOVER O ENVIO DE calculateResults para ter UM ÚNICO ENVIO NO FINAL.
-
-    // -- COMENTAR OU REMOVER O ENVIO DENTRO DE calculateResults() se você quer apenas UM envio --
-
+    // Adicionando as respostas das perguntas
     const q1 = document.querySelector('input[name="q1"]:checked');
     if (q1) formData.append('entry.209227467', q1.value);
 
@@ -331,7 +271,7 @@ function retrySubmit() {
     }
     const resultsSection = document.getElementById('results');
     if (resultsSection) {
-        resultsSection.classList.add('active');
+        resultsSection.classList.add('active'); // Garante que a tela de resultados volte a ser ativa
     }
     console.log('Tentando novamente');
 }
