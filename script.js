@@ -135,34 +135,37 @@ function downloadReward() {
     window.open('https://drive.google.com/uc?export=download&id=18UX4I0amlZkebsLvEya_j665Q42bhN6A', '_blank');
 }
 
-function submitForm() {
+// ** FUNÇÃO submitForm() MODIFICADA **
+async function submitForm() {
     const leadType = document.getElementById('leadType').value;
-    const userName = document.getElementById('userName').value;
-    const userEmail = document.getElementById('userEmail').value;
+    // Pega o valor do userName e userEmail, mesmo que o campo esteja oculto ou vazio
+    const userName = document.getElementById('userName').value || '';
+    const userEmail = document.getElementById('userEmail').value || '';
     const errorMessage = document.getElementById('errorMessage');
 
-    // Validar nome e email apenas para leads quentes e mornos
+    // ** Validar nome e email APENAS para leads quentes e mornos (e mostrar erro se não preenchido)**
     if ((leadType === 'quente' || leadType === 'morno') && (!userName || !userEmail)) {
         if (errorMessage) {
             document.getElementById('results').classList.remove('active');
             document.getElementById('successMessage').style.display = 'none';
             errorMessage.style.display = 'block';
             errorMessage.querySelector('#errorText').textContent = 'Por favor, preencha seu nome e e-mail para continuar.';
-            console.log('Erro: Nome ou e-mail não preenchidos');
+            console.log('Erro: Nome ou e-mail não preenchidos para lead quente/morno');
         }
-        return;
+        return; // Interrompe a função se a validação falhar para leads quentes/mornos
     }
 
-    document.getElementById('loadingOverlay').style.display = 'flex';
-
+    // ** IMPORTANTE: Coletar os dados de todas as perguntas aqui, garantindo que tudo seja enviado **
     const formData = new FormData();
+
     // Adicionando os campos calculados e de contato
     formData.append('entry.2041325370', leadType); // Tipo de Lead
     formData.append('entry.1468627395', document.getElementById('leadScore').value); // Pontuação do Lead
-    formData.append('entry.930013255', userName); // Nome
-    formData.append('entry.957828304', userEmail); // Email
+    formData.append('entry.930013255', userName); // Nome (pode ser vazio para lead frio)
+    formData.append('entry.957828304', userEmail); // Email (pode ser vazio para lead frio)
 
-    // Adicionando as respostas das perguntas
+    // Adicionando as respostas das perguntas (garantindo que todas são coletadas)
+    // Usamos o querySelector para garantir que pegamos o valor atual da resposta
     const q1 = document.querySelector('input[name="q1"]:checked');
     if (q1) formData.append('entry.209227467', q1.value);
 
@@ -190,24 +193,33 @@ function submitForm() {
     const q8 = document.querySelector('input[name="q8"]:checked');
     if (q8) formData.append('entry.783937939', q8.value);
 
+    // Fim da coleta de dados
+
     // Log dos dados enviados para depuração
-    console.log('Dados do formulário:', Object.fromEntries(formData));
+    console.log('Dados do formulário a serem enviados:', Object.fromEntries(formData));
+
+    document.getElementById('loadingOverlay').style.display = 'flex';
 
     // URL de submissão do Google Forms
     const googleFormsSubmitUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSeyIolUOSjvEo_GfgPqbS-X_9J_pwjLrQykVfUZtS-Nc6T7Zg/formResponse';
 
-    fetch(googleFormsSubmitUrl, {
-        method: 'POST',
-        body: formData,
-        mode: 'no-cors'
-    })
-    .then(() => {
+    try {
+        const response = await fetch(googleFormsSubmitUrl, {
+            method: 'POST',
+            body: formData,
+            mode: 'no-cors'
+        });
+
+        // Como mode: 'no-cors', o 'response.ok' sempre será false,
+        // mas a requisição pode ter sido bem-sucedida no backend.
+        // A melhor forma de saber se funcionou para o Google Forms
+        // com 'no-cors' é verificar na sua planilha.
         document.getElementById('loadingOverlay').style.display = 'none';
         document.getElementById('results').classList.remove('active');
         document.getElementById('successMessage').style.display = 'block';
-        console.log('Formulário enviado com sucesso para o Google Forms!');
-    })
-    .catch(error => {
+        console.log('Formulário enviado com sucesso para o Google Forms! (Verifique sua planilha)');
+
+    } catch (error) {
         document.getElementById('loadingOverlay').style.display = 'none';
         document.getElementById('results').classList.remove('active');
         if (errorMessage) {
@@ -215,7 +227,7 @@ function submitForm() {
             errorMessage.querySelector('#errorText').textContent = 'Não foi possível enviar suas respostas. Tente novamente mais tarde.';
             console.error('Erro ao enviar para o Google Forms:', error);
         }
-    });
+    }
 }
 
 function retrySubmit() {
