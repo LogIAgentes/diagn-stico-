@@ -657,3 +657,11 @@ body {
         font-size: 0.95rem;
     }
 }
+/* Adicione este código no seu arquivo styles.css */
+
+.site-logo {
+    max-width: 250px; /* Ajuste o tamanho conforme necessário para o seu layout */
+    height: auto; /* Mantém a proporção da imagem */
+    margin: 20px auto; /* Centraliza e adiciona margem superior/inferior */
+    display: block; /* Garante que o logo ocupe sua própria linha */
+}
