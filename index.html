@@ -29,7 +29,7 @@
 
         <main class="main-content">
             <form id="leadForm" class="form" data-netlify="true" name="lead-form" method="POST">
-                <input type="hidden" name="form-name" value="lead-form">
+                <input type="hidden" name="surveyData" id="surveyData">
                 <section class="form-section active" id="section1">
                     <div class="section-header">
                         <h2 class="section-title">Diagnóstico Atual</h2>
@@ -355,18 +355,18 @@
                         <div class="results-description" id="resultsDescription">
                             <p id="resultsText"></p>
                         </div>
-                        <div class="contact-form" id="contactForm">
-                            <h3 class="contact-title">Faça o download dos prompts primeiro e Para Receber soluções personalizadas de IA</h3>
-                            <p class="contact-description">Deixe seus dados para receber conteúdos exclusivos e propostas de soluções de IA para seu negócio.</p>
-                            <div class="input-group">
-                                <label for="userName" class="input-label">Nome completo</label>
-                                <input type="text" id="userName" name="userName" class="form-input" placeholder="Digite seu nome completo">
-                            </div>
-                            <div class="input-group">
-                                <label for="userEmail" class="input-label">E-mail</label>
-                                <input type="email" id="userEmail" name="userEmail" class="form-input" placeholder="Digite seu melhor e-mail">
-                            </div>
-                        </div>
+                       <div class="contact-form" id="contactForm" style="display: none;">
+    <h3 class="contact-title">Receba Soluções Personalizadas de IA</h3>
+    <p class="contact-description">Obrigado por completar o diagnóstico! Suas respostas foram enviadas. Para receber conteúdos exclusivos e propostas personalizadas, deixe seus dados abaixo:</p>
+    <div class="input-group">
+        <label for="userName" class="input-label">Nome completo</label>
+        <input type="text" id="userName" name="userName" class="form-input" placeholder="Digite seu nome completo">
+    </div>
+    <div class="input-group">
+        <label for="userEmail" class="input-label">E-mail</label>
+        <input type="email" id="userEmail" name="userEmail" class="form-input" placeholder="Digite seu melhor e-mail">
+    </div>
+</div>
                         <div class="reward-section">
                             <div class="reward-card">
                                 <div class="reward-icon">
